@@ -11,6 +11,11 @@ compile_commands.json
 CTestTestfile.cmake
 _deps
 
+#Directories
+build
+.cache
+.cmake
+
 # Prerequisites
 *.d
 
