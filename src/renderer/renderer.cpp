@@ -1,9 +1,11 @@
 #include "glad/glad.h"
-#include "shader.h"
+#include "primitives/triangle.h"
 
 #include "renderer.h"
 
 #include <GLFW/glfw3.h>
+#include <cassert>
+#include <glm/ext/matrix_float4x4.hpp>
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
@@ -42,20 +44,8 @@ bool Renderer::Initialize() {
   glViewport(0, 0, start_width, start_height);
   glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-  triangle =
-      std::unique_ptr<Shader>(new Shader(VERTEX_SHADER_PATH, FRAG_SHADER_PATH));
-
-  glGenVertexArrays(1, &VAO);
-  glGenBuffers(1, &VBO);
-
-  glBindVertexArray(VAO);
-
-  glBindBuffer(GL_ARRAY_BUFFER, VBO);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
-  glEnableVertexAttribArray(0);
-
+  triangle = std::unique_ptr<Triangle>(new Triangle());
+  assert(triangle != nullptr);
   ui = GUI();
 
   return true;
@@ -63,22 +53,24 @@ bool Renderer::Initialize() {
 
 void Renderer::Update() {
 
+  float aspect = Renderer::start_width / Renderer::start_height;
+
+  projection = glm::ortho(-aspect, aspect, -1.0f, 1.0f, 0.1f, 10.0f);
+  view = glm::translate(glm::mat4{1.0f}, glm::vec3{0, 0, -1});
+
   ProcessEvents();
 
   ImGui_ImplOpenGL3_NewFrame();
   ImGui_ImplGlfw_NewFrame();
   ImGui::NewFrame();
 
-  glm::vec4 color;
   glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+
   glClear(GL_COLOR_BUFFER_BIT);
+  ui.DrawColorWindow(triangle->color);
 
-  triangle->SetVec4Uniform("uColor", color);
-  triangle->Use();
-  glBindVertexArray(VAO);
-  glDrawArrays(GL_TRIANGLES, 0, 3);
+  triangle->Draw(projection, view);
 
-  ui.DrawColorWindow(color);
   ImGui::Render();
   ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
@@ -103,6 +95,14 @@ void Renderer::ProcessEvents() {
   if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
     glfwSetWindowShouldClose(window, true);
   }
+}
+
+void Renderer::Finalize() {
+  ImGui_ImplOpenGL3_Shutdown();
+  ImGui_ImplGlfw_Shutdown();
+  ImGui::DestroyContext();
+
+  glfwTerminate();
 }
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height) {

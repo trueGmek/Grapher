@@ -16,8 +16,16 @@ find_package(glfw3 CONFIG REQUIRED)
 
 # CONFIGURE RENDERER LIBRARY
 set(RENDERER_SOURCES
-    src/renderer/shader.cpp src/renderer/shader.h src/renderer/renderer.h
-    src/renderer/renderer.cpp src/renderer/GUI/GUI.cpp src/renderer/GUI/GUI.h)
+    src/renderer/shader.cpp
+    src/renderer/shader.h
+    src/renderer/renderer.h
+    src/renderer/renderer.cpp
+    src/renderer/GUI/GUI.cpp
+    src/renderer/GUI/GUI.h
+    src/renderer/primitives/triangle.cpp
+    src/renderer/primitives/triangle.h
+    src/renderer/primitives/primitive.h
+)
 
 add_library(renderer ${RENDERER_SOURCES})
 

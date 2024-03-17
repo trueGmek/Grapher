@@ -1,7 +1,8 @@
 #pragma once
 #include "GUI/GUI.h"
-#include "shader.h"
+#include "primitives/triangle.h"
 #include <GLFW/glfw3.h>
+#include <glm/ext/matrix_float4x4.hpp>
 #include <memory>
 
 class Renderer {
@@ -14,27 +15,22 @@ public:
 
   bool IsClosing() { return glfwWindowShouldClose(window); }
 
+  glm::mat4 view{1.0f};
+  glm::mat4 projection{1.0f};
+
+  constexpr static const float start_width = 1600;
+  constexpr static const float start_height = 1200;
+
 private:
   GUI ui;
   unsigned int VBO, VAO;
 
-  std::unique_ptr<Shader> triangle;
   GLFWwindow *window = nullptr;
 
   void ProcessEvents();
   bool CreateWindow();
 
-  const std::string VERTEX_SHADER_PATH = "../resources/shaders/triangle.vert";
-  const std::string FRAG_SHADER_PATH = "../resources/shaders/triangle.frag";
-
-  const float vertices[9] = {
-      -0.5f, -0.5f, 0.0f, //
-      0.5f,  -0.5f, 0.0f, //
-      0.0f,  0.5f,  0.0f  //
-  };
-
-  const float start_width = 1600;
-  const float start_height = 1200;
+  std::unique_ptr<Triangle> triangle;
 };
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
