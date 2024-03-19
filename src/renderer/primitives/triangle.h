@@ -3,14 +3,14 @@
 #include <glm/ext/vector_float3.hpp>
 #include <primitives/primitive.h>
 
-class Triangle : protected Primitive {
+class Triangle : public Primitive {
 public:
   Triangle();
   ~Triangle();
 
   glm::vec4 color{};
 
-  void Draw(const glm::mat4 &projection, const glm::mat4 &view);
+  void Draw(const glm::mat4 &projection, const glm::mat4 &view) override;
 
 private:
   const float vertices[9] = {

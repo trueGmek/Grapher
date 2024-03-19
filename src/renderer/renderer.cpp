@@ -1,11 +1,15 @@
 #include "glad/glad.h"
+#include "primitives/square.h"
 #include "primitives/triangle.h"
 
 #include "renderer.h"
 
 #include <GLFW/glfw3.h>
-#include <cassert>
+#include <glm/detail/qualifier.hpp>
 #include <glm/ext/matrix_float4x4.hpp>
+#include <glm/ext/quaternion_float.hpp>
+#include <glm/ext/quaternion_transform.hpp>
+#include <glm/ext/vector_float3.hpp>
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
@@ -13,6 +17,9 @@
 #include <iostream>
 #include <memory>
 #include <ostream>
+
+#define GLM_ENABLE_EXPERIMENTAL
+#include "glm/gtx/string_cast.hpp"
 
 bool Renderer::Initialize() {
 
@@ -44,8 +51,14 @@ bool Renderer::Initialize() {
   glViewport(0, 0, start_width, start_height);
   glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
+  square = std::unique_ptr<Square>(new Square());
+
   triangle = std::unique_ptr<Triangle>(new Triangle());
-  assert(triangle != nullptr);
+  triangle->Position = glm::vec3(0, 0.5f, 0);
+  triangle->Rotation = glm::quat(glm::vec3(0, 0, glm::radians(180.0f)));
+
+  triangle2 = std::unique_ptr<Triangle>(new Triangle());
+  triangle2->Position = glm::vec3(0, -0.5f, 0);
   ui = GUI();
 
   return true;
@@ -67,15 +80,23 @@ void Renderer::Update() {
   glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
   glClear(GL_COLOR_BUFFER_BIT);
-  ui.DrawColorWindow(triangle->color);
-
-  triangle->Draw(projection, view);
+  RenderPrimitives();
 
   ImGui::Render();
   ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
   glfwSwapBuffers(window);
   glfwPollEvents();
+}
+
+void Renderer::RenderPrimitives() {
+  ui.DrawColorWindow(triangle->color);
+  triangle2->color = triangle->color;
+  square->color = triangle->color;
+
+  triangle->Draw(projection, view);
+  triangle2->Draw(projection, view);
+  square->Draw(projection, view);
 }
 
 bool Renderer::CreateWindow() {

@@ -1,3 +1,5 @@
+#pragma once
+
 #include "shader.h"
 #include <glm/ext/quaternion_float.hpp>
 #include <glm/ext/vector_float3.hpp>

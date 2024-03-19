@@ -22,9 +22,11 @@ set(RENDERER_SOURCES
     src/renderer/renderer.cpp
     src/renderer/GUI/GUI.cpp
     src/renderer/GUI/GUI.h
+    src/renderer/primitives/primitive.h
     src/renderer/primitives/triangle.cpp
     src/renderer/primitives/triangle.h
-    src/renderer/primitives/primitive.h
+    src/renderer/primitives/square.h
+    src/renderer/primitives/square.cpp
 )
 
 add_library(renderer ${RENDERER_SOURCES})
@@ -38,9 +40,9 @@ target_link_libraries(renderer PRIVATE imgui::imgui)
 
 # CONFIGURE PORJECT
 project(
-  ImGuiExample
+  Grapher
   VERSION 1.0
-  DESCRIPTION "TEST PROJECT"
+  DESCRIPTION "Grapher"
   LANGUAGES CXX)
 
 set(PROJECT_FILES src/main.cpp)
