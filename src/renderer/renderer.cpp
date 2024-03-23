@@ -1,4 +1,5 @@
 #include "glad/glad.h"
+#include "primitives/point.h"
 #include "primitives/square.h"
 #include "primitives/triangle.h"
 
@@ -10,6 +11,7 @@
 #include <glm/ext/quaternion_float.hpp>
 #include <glm/ext/quaternion_transform.hpp>
 #include <glm/ext/vector_float3.hpp>
+#include <glm/ext/vector_float4.hpp>
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
@@ -19,7 +21,6 @@
 #include <ostream>
 
 #define GLM_ENABLE_EXPERIMENTAL
-#include "glm/gtx/string_cast.hpp"
 
 bool Renderer::Initialize() {
 
@@ -51,9 +52,18 @@ bool Renderer::Initialize() {
   glViewport(0, 0, start_width, start_height);
   glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
+  point = std::unique_ptr<Point>(new Point());
+  point->color = glm::vec4(0.0f);
+  point->size = 10;
+
   square = std::unique_ptr<Square>(new Square());
+  square->color = glm::vec4(0.25f);
+  square->Scale = glm::vec3(1.5f);
+  square->Position = glm::vec3(0.5, 0.0, 0.0);
 
   triangle = std::unique_ptr<Triangle>(new Triangle());
+
+  triangle->Scale = glm::vec3(0.25f);
   triangle->Position = glm::vec3(0, 0.5f, 0);
   triangle->Rotation = glm::quat(glm::vec3(0, 0, glm::radians(180.0f)));
 
@@ -92,11 +102,11 @@ void Renderer::Update() {
 void Renderer::RenderPrimitives() {
   ui.DrawColorWindow(triangle->color);
   triangle2->color = triangle->color;
-  square->color = triangle->color;
 
   triangle->Draw(projection, view);
   triangle2->Draw(projection, view);
   square->Draw(projection, view);
+  point->Draw(projection, view);
 }
 
 bool Renderer::CreateWindow() {

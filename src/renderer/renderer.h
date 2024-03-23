@@ -1,5 +1,6 @@
 #pragma once
 #include "GUI/GUI.h"
+#include "primitives/point.h"
 #include "primitives/square.h"
 #include "primitives/triangle.h"
 #include <GLFW/glfw3.h>
@@ -35,6 +36,7 @@ private:
   std::unique_ptr<Triangle> triangle;
   std::unique_ptr<Triangle> triangle2;
   std::unique_ptr<Square> square;
+  std::unique_ptr<Point> point;
 };
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);

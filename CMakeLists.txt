@@ -27,6 +27,8 @@ set(RENDERER_SOURCES
     src/renderer/primitives/triangle.h
     src/renderer/primitives/square.h
     src/renderer/primitives/square.cpp
+    src/renderer/primitives/point.h
+    src/renderer/primitives/point.cpp
 )
 
 add_library(renderer ${RENDERER_SOURCES})

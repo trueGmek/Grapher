@@ -20,15 +20,7 @@ private:
       0, 1, 3, // first triangle
       1, 2, 3  // second triangle
   };
-  // const float vertices[12]{
-  //     -0.5, 0.5,  0.0, // TOP LEFT
-  //     0.5,  0.5,  0.0, // TOP RIGHT
-  //     -0.5, -0.5, 0.0, // BOTTOM LEFT
-  //     0.5,  -0.5, 0.0, // BOTTOM RIGHT
-  // };
-  //
-  // const float indicies[6]{0, 2, 3,  //
-  //                         0, 1, 3}; //
+
 public:
   Square();
   ~Square();
