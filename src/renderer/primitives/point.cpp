@@ -28,8 +28,8 @@ Point::Point() : Primitive(VERTEX_SHADER_PATH, FRAGMENT_SHADER_PATH) {
 void Point::Draw(const glm::mat4 &projection, const glm::mat4 &view) {
 
   shader.Use();
-  shader.SetMat4Uniform("MVP", CalculateMVP(projection, view));
-  shader.SetVec4Uniform("uColor", color);
+  shader.SetMat4Uniform(Shader::Keywords::MVP, CalculateMVP(projection, view));
+  shader.SetVec4Uniform(Shader::Keywords::Color, color);
   glBindVertexArray(VAO);
 
   glPointSize(size);

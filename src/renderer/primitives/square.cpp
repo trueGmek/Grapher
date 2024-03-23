@@ -28,8 +28,8 @@ Square::Square() : Primitive(VERTEX_SHADER_PATH, FRAG_SHADER_PATH) {
 void Square::Draw(const glm::mat4 &projection, const glm::mat4 &view) {
 
   shader.Use();
-  shader.SetMat4Uniform("MVP", CalculateMVP(projection, view));
-  shader.SetVec4Uniform("uColor", color);
+  shader.SetMat4Uniform(Shader::Keywords::MVP, CalculateMVP(projection, view));
+  shader.SetVec4Uniform(Shader::Keywords::Color, color);
   glBindVertexArray(VAO);
 
   glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);

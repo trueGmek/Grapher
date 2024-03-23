@@ -20,8 +20,8 @@ Triangle::Triangle() : Primitive(VERTEX_SHADER_PATH, FRAG_SHADER_PATH) {
 void Triangle::Draw(const glm::mat4 &projection, const glm::mat4 &view) {
 
   shader.Use();
-  shader.SetMat4Uniform("MVP", CalculateMVP(projection, view));
-  shader.SetVec4Uniform("uColor", color);
+  shader.SetMat4Uniform(Shader::Keywords::MVP, CalculateMVP(projection, view));
+  shader.SetVec4Uniform(Shader::Keywords::Color, color);
 
   glBindVertexArray(VAO);
   glDrawArrays(GL_TRIANGLES, 0, 3);

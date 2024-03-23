@@ -30,8 +30,8 @@ Line::Line(glm::vec3 start, glm::vec3 end)
 
 void Line::Draw(const glm::mat4 &projection, const glm::mat4 &view) {
   shader.Use();
-  shader.SetMat4Uniform("MVP", CalculateMVP(projection, view));
-  shader.SetVec4Uniform("uColor", color);
+  shader.SetMat4Uniform(Shader::Keywords::MVP, CalculateMVP(projection, view));
+  shader.SetVec4Uniform(Shader::Keywords::Color, color);
   glBindVertexArray(VAO);
 
   glDrawArrays(GL_LINES, 0, 2);
