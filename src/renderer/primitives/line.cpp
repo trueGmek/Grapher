@@ -1,4 +1,5 @@
-#include "point.h"
+
+#include "line.h"
 
 #include <GL/gl.h>
 #include <glm/ext/matrix_float4x4.hpp>
@@ -7,7 +8,9 @@
 const std::string VERTEX_SHADER_PATH{"../resources/shaders/point.vert"};
 const std::string FRAGMENT_SHADER_PATH{"../resources/shaders/point.frag"};
 
-Point::Point() : Primitive(VERTEX_SHADER_PATH, FRAGMENT_SHADER_PATH) {
+Line::Line(glm::vec3 start, glm::vec3 end)
+    : Primitive(VERTEX_SHADER_PATH, FRAGMENT_SHADER_PATH),
+      vertices{start.x, start.y, start.z, end.x, end.y, end.z} {
 
   glGenVertexArrays(1, &VAO);
   glGenBuffers(1, &VBO);
@@ -25,17 +28,15 @@ Point::Point() : Primitive(VERTEX_SHADER_PATH, FRAGMENT_SHADER_PATH) {
   glBindVertexArray(0);
 };
 
-void Point::Draw(const glm::mat4 &projection, const glm::mat4 &view) {
-
+void Line::Draw(const glm::mat4 &projection, const glm::mat4 &view) {
   shader.Use();
   shader.SetMat4Uniform("MVP", CalculateMVP(projection, view));
   shader.SetVec4Uniform("uColor", color);
   glBindVertexArray(VAO);
 
-  glPointSize(size);
-  glDrawArrays(GL_POINTS, 0, 1);
+  glDrawArrays(GL_LINES, 0, 2);
 
   glBindVertexArray(0);
 }
 
-Point::~Point() {}
+Line::~Line() {}

@@ -1,5 +1,6 @@
 #pragma once
 #include "GUI/GUI.h"
+#include "primitives/line.h"
 #include "primitives/point.h"
 #include "primitives/square.h"
 #include "primitives/triangle.h"
@@ -34,9 +35,9 @@ private:
   void RenderPrimitives();
 
   std::unique_ptr<Triangle> triangle;
-  std::unique_ptr<Triangle> triangle2;
   std::unique_ptr<Square> square;
   std::unique_ptr<Point> point;
+  std::unique_ptr<Line> x_line,y_line,z_line;
 };
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);

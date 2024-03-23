@@ -1,4 +1,5 @@
 #include "glad/glad.h"
+#include "primitives/line.h"
 #include "primitives/point.h"
 #include "primitives/square.h"
 #include "primitives/triangle.h"
@@ -8,10 +9,13 @@
 #include <GLFW/glfw3.h>
 #include <glm/detail/qualifier.hpp>
 #include <glm/ext/matrix_float4x4.hpp>
+#include <glm/ext/matrix_transform.hpp>
 #include <glm/ext/quaternion_float.hpp>
 #include <glm/ext/quaternion_transform.hpp>
 #include <glm/ext/vector_float3.hpp>
 #include <glm/ext/vector_float4.hpp>
+#include <glm/gtc/constants.hpp>
+#include <glm/gtc/quaternion.hpp>
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
@@ -58,17 +62,19 @@ bool Renderer::Initialize() {
 
   square = std::unique_ptr<Square>(new Square());
   square->color = glm::vec4(0.25f);
-  square->Scale = glm::vec3(1.5f);
-  square->Position = glm::vec3(0.5, 0.0, 0.0);
+  square->scale = glm::vec3(1.5f);
 
   triangle = std::unique_ptr<Triangle>(new Triangle());
 
-  triangle->Scale = glm::vec3(0.25f);
-  triangle->Position = glm::vec3(0, 0.5f, 0);
-  triangle->Rotation = glm::quat(glm::vec3(0, 0, glm::radians(180.0f)));
+  x_line = std::unique_ptr<Line>(
+      new Line(glm::vec3(-1.0, 0.0, 0.0), glm::vec3(1.0, 0.0, 0.0)));
 
-  triangle2 = std::unique_ptr<Triangle>(new Triangle());
-  triangle2->Position = glm::vec3(0, -0.5f, 0);
+  y_line = std::unique_ptr<Line>(
+      new Line(glm::vec3(0.0, -1.0, 0.0), glm::vec3(0.0, 1.0, 0.0)));
+
+  z_line = std::unique_ptr<Line>(
+      new Line(glm::vec3(0.0, 0.0, -1.0), glm::vec3(0.0, 0.0, 1.0)));
+
   ui = GUI();
 
   return true;
@@ -101,12 +107,12 @@ void Renderer::Update() {
 
 void Renderer::RenderPrimitives() {
   ui.DrawColorWindow(triangle->color);
-  triangle2->color = triangle->color;
-
-  triangle->Draw(projection, view);
-  triangle2->Draw(projection, view);
   square->Draw(projection, view);
+  triangle->Draw(projection, view);
   point->Draw(projection, view);
+  x_line->Draw(projection, view);
+  y_line->Draw(projection, view);
+  z_line->Draw(projection, view);
 }
 
 bool Renderer::CreateWindow() {
