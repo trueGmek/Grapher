@@ -23,7 +23,6 @@ private:
 
 public:
   Square();
-  ~Square();
 
   void Draw(const glm::mat4 &projection, const glm::mat4 &view) override;
 };

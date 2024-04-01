@@ -6,7 +6,6 @@
 class Triangle : public Primitive {
 public:
   Triangle();
-  ~Triangle();
 
   glm::vec4 color{};
 

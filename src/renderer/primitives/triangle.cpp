@@ -1,7 +1,7 @@
 #include "triangle.h"
 
-const std::string VERTEX_SHADER_PATH = "../resources/shaders/triangle.vert";
-const std::string FRAG_SHADER_PATH = "../resources/shaders/triangle.frag";
+const std::string VERTEX_SHADER_PATH{"../resources/shaders/triangle.vert"};
+const std::string FRAG_SHADER_PATH{"../resources/shaders/triangle.frag"};
 
 Triangle::Triangle() : Primitive(VERTEX_SHADER_PATH, FRAG_SHADER_PATH) {
 
@@ -28,4 +28,3 @@ void Triangle::Draw(const glm::mat4 &projection, const glm::mat4 &view) {
 
   glBindVertexArray(0);
 }
-Triangle::~Triangle() {}

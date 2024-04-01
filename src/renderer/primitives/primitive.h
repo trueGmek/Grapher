@@ -4,14 +4,19 @@
 #include <glm/ext/matrix_float4x4.hpp>
 #include <glm/ext/quaternion_float.hpp>
 #include <glm/ext/vector_float3.hpp>
+#include <memory>
+#include <vector>
 
 #include "glm/ext/quaternion_trigonometric.hpp"
+#include "transform.h"
 
-class Primitive {
+class Primitive : std::enable_shared_from_this<Primitive> {
 public:
-  glm::vec3 position{0.0f, 0.0f, 0.0f};
-  glm::vec3 scale{1, 1, 1};
-  glm::quat rotation{1.0f, 0.0f, 0.0f, 0.0f};
+  Transform transform;
+
+  std::vector<std::shared_ptr<Primitive>> children{};
+
+  Primitive *parent;
 
 protected:
   unsigned int VBO, VAO;
@@ -24,17 +29,33 @@ public:
 
   virtual void Draw(const glm::mat4 &projection, const glm::mat4 &view) = 0;
 
+  template <typename T> void AddChild(const std::shared_ptr<T> &child) {
+
+    children.emplace_back(std::shared_ptr(child));
+    children.back()->parent = this;
+  }
+
+  template <typename T> void AddChild(std::unique_ptr<T> &&child) {
+
+    children.emplace_back(std::shared_ptr<T>(std::move(child)));
+    children.back()->parent = this;
+  }
+
 protected:
   /// This methods calculates and returns the Model-View-Projection matrix
   const glm::mat4 CalculateMVP(const glm::mat4 &projection,
                                const glm::mat4 &view) {
 
-    glm::mat4 model{1.0f};
+    glm::mat4 TRS{1.0f};
 
-    model = glm::translate(model, position);
-    model = glm::rotate(model, angle(rotation), axis(rotation));
-    model = glm::scale(model, scale);
+    TRS = glm::translate(TRS, transform.position);
+    TRS = glm::rotate(TRS, angle(transform.rotation), axis(transform.rotation));
+    TRS = glm::scale(TRS, transform.scale);
 
-    return projection * view * model;
+    if (parent == nullptr) {
+      return projection * view * TRS;
+    }
+
+    return parent->CalculateMVP(projection, view) * projection * view * TRS;
   }
 };

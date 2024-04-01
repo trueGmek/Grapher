@@ -7,7 +7,6 @@
 class Point : public Primitive {
 public:
   Point();
-  ~Point();
 
   void Draw(const glm::mat4 &projection, const glm::mat4 &view) override;
 

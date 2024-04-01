@@ -31,6 +31,7 @@ set(RENDERER_SOURCES
     src/renderer/primitives/point.cpp
     src/renderer/primitives/line.h
     src/renderer/primitives/line.cpp
+    src/renderer/transform.h
 )
 
 add_library(renderer ${RENDERER_SOURCES})

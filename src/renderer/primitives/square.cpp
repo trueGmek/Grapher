@@ -4,8 +4,8 @@
 #include <glm/ext/matrix_float4x4.hpp>
 #include <glm/ext/vector_float3.hpp>
 
-const std::string VERTEX_SHADER_PATH = "../resources/shaders/triangle.vert";
-const std::string FRAG_SHADER_PATH = "../resources/shaders/triangle.frag";
+const std::string VERTEX_SHADER_PATH{"../resources/shaders/triangle.vert"};
+const std::string FRAG_SHADER_PATH{"../resources/shaders/triangle.frag"};
 
 Square::Square() : Primitive(VERTEX_SHADER_PATH, FRAG_SHADER_PATH) {
   glGenVertexArrays(1, &VAO);
@@ -36,5 +36,3 @@ void Square::Draw(const glm::mat4 &projection, const glm::mat4 &view) {
 
   glBindVertexArray(0);
 }
-
-Square::~Square() {}

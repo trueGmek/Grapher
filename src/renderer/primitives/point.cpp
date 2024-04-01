@@ -37,5 +37,3 @@ void Point::Draw(const glm::mat4 &projection, const glm::mat4 &view) {
 
   glBindVertexArray(0);
 }
-
-Point::~Point() {}

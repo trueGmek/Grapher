@@ -38,5 +38,3 @@ void Line::Draw(const glm::mat4 &projection, const glm::mat4 &view) {
 
   glBindVertexArray(0);
 }
-
-Line::~Line() {}

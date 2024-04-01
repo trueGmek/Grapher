@@ -56,24 +56,31 @@ bool Renderer::Initialize() {
   glViewport(0, 0, start_width, start_height);
   glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-  point = std::unique_ptr<Point>(new Point());
+  canvas = std::make_shared<Square>();
+  canvas->color = glm::vec4(0.25f);
+  canvas->transform.scale = glm::vec3(1.5f);
+
+  auto point = std::make_shared<Point>();
   point->color = glm::vec4(0.0f);
   point->size = 10;
 
-  square = std::unique_ptr<Square>(new Square());
-  square->color = glm::vec4(0.25f);
-  square->scale = glm::vec3(1.5f);
+  auto triangle = std::make_shared<Triangle>();
+  triangle->color = glm::vec4(1.0, 0.0, 0.0, 1.0);
 
-  triangle = std::unique_ptr<Triangle>(new Triangle());
+  auto x_line = std::make_shared<Line>(glm::vec3(-1.0, 0.0, 0.0),
+                                       glm::vec3(1.0, 0.0, 0.0));
 
-  x_line = std::unique_ptr<Line>(
-      new Line(glm::vec3(-1.0, 0.0, 0.0), glm::vec3(1.0, 0.0, 0.0)));
+  auto y_line = std::make_shared<Line>(glm::vec3(0.0, -1.0, 0.0),
+                                       glm::vec3(0.0, 1.0, 0.0));
 
-  y_line = std::unique_ptr<Line>(
-      new Line(glm::vec3(0.0, -1.0, 0.0), glm::vec3(0.0, 1.0, 0.0)));
+  auto z_line = std::make_shared<Line>(glm::vec3(0.0, 0.0, -1.0),
+                                       glm::vec3(0.0, 0.0, 1.0));
 
-  z_line = std::unique_ptr<Line>(
-      new Line(glm::vec3(0.0, 0.0, -1.0), glm::vec3(0.0, 0.0, 1.0)));
+  canvas->AddChild(triangle);
+  canvas->AddChild(point);
+  canvas->AddChild(x_line);
+  canvas->AddChild(y_line);
+  canvas->AddChild(z_line);
 
   ui = GUI();
 
@@ -106,13 +113,11 @@ void Renderer::Update() {
 }
 
 void Renderer::RenderPrimitives() {
-  ui.DrawColorWindow(triangle->color);
-  square->Draw(projection, view);
-  triangle->Draw(projection, view);
-  point->Draw(projection, view);
-  x_line->Draw(projection, view);
-  y_line->Draw(projection, view);
-  z_line->Draw(projection, view);
+  canvas->Draw(projection, view);
+  for (auto child : canvas->children) {
+    child->Draw(projection, view);
+  }
+  ui.DrawColorWindow(canvas->color);
 }
 
 bool Renderer::CreateWindow() {

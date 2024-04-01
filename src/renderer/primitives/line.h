@@ -7,7 +7,6 @@
 class Line : public Primitive {
 public:
   Line(glm::vec3 start, glm::vec3 end);
-  ~Line();
 
   void Draw(const glm::mat4 &projection, const glm::mat4 &view) override;
   glm::vec4 color;
