@@ -28,9 +28,9 @@ Line::Line(glm::vec3 start, glm::vec3 end)
   glBindVertexArray(0);
 };
 
-void Line::Draw(const glm::mat4 &projection, const glm::mat4 &view) {
+void Line::Draw(const glm::mat4 &PV) {
   shader.Use();
-  shader.SetMat4Uniform(Shader::Keywords::MVP, CalculateMVP(projection, view));
+  shader.SetMat4Uniform(Shader::Keywords::MVP, CalculateMVP(PV));
   shader.SetVec4Uniform(Shader::Keywords::Color, color);
   glBindVertexArray(VAO);
 

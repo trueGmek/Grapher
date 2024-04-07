@@ -25,10 +25,10 @@ Square::Square() : Primitive(VERTEX_SHADER_PATH, FRAG_SHADER_PATH) {
   glEnableVertexAttribArray(0);
 }
 
-void Square::Draw(const glm::mat4 &projection, const glm::mat4 &view) {
+void Square::Draw(const glm::mat4 &PV) {
 
   shader.Use();
-  shader.SetMat4Uniform(Shader::Keywords::MVP, CalculateMVP(projection, view));
+  shader.SetMat4Uniform(Shader::Keywords::MVP, CalculateMVP(PV));
   shader.SetVec4Uniform(Shader::Keywords::Color, color);
   glBindVertexArray(VAO);
 

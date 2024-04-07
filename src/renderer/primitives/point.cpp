@@ -25,10 +25,10 @@ Point::Point() : Primitive(VERTEX_SHADER_PATH, FRAGMENT_SHADER_PATH) {
   glBindVertexArray(0);
 };
 
-void Point::Draw(const glm::mat4 &projection, const glm::mat4 &view) {
+void Point::Draw(const glm::mat4 &PV) {
 
   shader.Use();
-  shader.SetMat4Uniform(Shader::Keywords::MVP, CalculateMVP(projection, view));
+  shader.SetMat4Uniform(Shader::Keywords::MVP, CalculateMVP(PV));
   shader.SetVec4Uniform(Shader::Keywords::Color, color);
   glBindVertexArray(VAO);
 

@@ -1,8 +1,4 @@
 #include "glad/glad.h"
-#include "primitives/line.h"
-#include "primitives/point.h"
-#include "primitives/square.h"
-#include "primitives/triangle.h"
 
 #include "renderer.h"
 
@@ -19,6 +15,9 @@
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
+
+#include "primitives/primitive.h"
+#include "sceneProvider.h"
 
 #include <iostream>
 #include <memory>
@@ -56,31 +55,7 @@ bool Renderer::Initialize() {
   glViewport(0, 0, start_width, start_height);
   glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-  canvas = std::make_shared<Square>();
-  canvas->color = glm::vec4(0.25f);
-  canvas->transform.scale = glm::vec3(1.5f);
-
-  auto point = std::make_shared<Point>();
-  point->color = glm::vec4(0.0f);
-  point->size = 10;
-
-  auto triangle = std::make_shared<Triangle>();
-  triangle->color = glm::vec4(1.0, 0.0, 0.0, 1.0);
-
-  auto x_line = std::make_shared<Line>(glm::vec3(-1.0, 0.0, 0.0),
-                                       glm::vec3(1.0, 0.0, 0.0));
-
-  auto y_line = std::make_shared<Line>(glm::vec3(0.0, -1.0, 0.0),
-                                       glm::vec3(0.0, 1.0, 0.0));
-
-  auto z_line = std::make_shared<Line>(glm::vec3(0.0, 0.0, -1.0),
-                                       glm::vec3(0.0, 0.0, 1.0));
-
-  canvas->AddChild(triangle);
-  canvas->AddChild(point);
-  canvas->AddChild(x_line);
-  canvas->AddChild(y_line);
-  canvas->AddChild(z_line);
+  canvas = std::shared_ptr(SceneProvider::GetSamleScene());
 
   ui = GUI();
 
@@ -103,7 +78,7 @@ void Renderer::Update() {
   glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
   glClear(GL_COLOR_BUFFER_BIT);
-  RenderPrimitives();
+  RenderScene(canvas);
 
   ImGui::Render();
   ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -112,12 +87,9 @@ void Renderer::Update() {
   glfwPollEvents();
 }
 
-void Renderer::RenderPrimitives() {
-  canvas->Draw(projection, view);
-  for (auto child : canvas->children) {
-    child->Draw(projection, view);
-  }
-  ui.DrawColorWindow(canvas->color);
+void Renderer::RenderScene(const std::shared_ptr<Primitive> &root) {
+  auto PV = projection * view;
+  root->DrawRecursive(PV);
 }
 
 bool Renderer::CreateWindow() {

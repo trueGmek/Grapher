@@ -8,7 +8,7 @@ class Point : public Primitive {
 public:
   Point();
 
-  void Draw(const glm::mat4 &projection, const glm::mat4 &view) override;
+  void Draw(const glm::mat4 &PV) override;
 
   glm::vec4 color;
   std::size_t size{1};

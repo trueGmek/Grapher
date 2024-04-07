@@ -1,13 +1,12 @@
 #pragma once
 #include "GUI/GUI.h"
-#include "primitives/square.h"
+#include "primitives/primitive.h"
 #include <GLFW/glfw3.h>
 #include <glm/ext/matrix_float4x4.hpp>
 #include <memory>
 
 class Renderer {
 public:
-
   bool Initialize();
   void Update();
   void Finalize();
@@ -28,9 +27,9 @@ private:
 
   void ProcessEvents();
   bool CreateWindow();
-  void RenderPrimitives();
+  void RenderScene(const std::shared_ptr<Primitive> &root);
 
-  std::shared_ptr<Square> canvas;
+  std::shared_ptr<Primitive> canvas;
 };
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);

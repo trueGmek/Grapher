@@ -24,5 +24,5 @@ private:
 public:
   Square();
 
-  void Draw(const glm::mat4 &projection, const glm::mat4 &view) override;
+  void Draw(const glm::mat4 &PV) override;
 };

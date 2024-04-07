@@ -7,7 +7,6 @@
 #include <memory>
 #include <vector>
 
-#include "glm/ext/quaternion_trigonometric.hpp"
 #include "transform.h"
 
 class Primitive : std::enable_shared_from_this<Primitive> {
@@ -27,35 +26,26 @@ public:
   Primitive(auto vertexShaderPath, auto fragmentShaderPath)
       : shader(vertexShaderPath, fragmentShaderPath) {}
 
-  virtual void Draw(const glm::mat4 &projection, const glm::mat4 &view) = 0;
+  virtual void Draw(const glm::mat4 &PV) = 0;
 
-  template <typename T> void AddChild(const std::shared_ptr<T> &child) {
+  void DrawRecursive(const glm::mat4 &PV) {
 
-    children.emplace_back(std::shared_ptr(child));
-    children.back()->parent = this;
+    Draw(PV);
+
+    for (auto child : children) {
+      child->DrawRecursive(PV * transform.CalculateTRS());
+    }
   }
 
-  template <typename T> void AddChild(std::unique_ptr<T> &&child) {
-
-    children.emplace_back(std::shared_ptr<T>(std::move(child)));
+  void AddChild(const std::shared_ptr<Primitive> &child) {
+    children.emplace_back(child);
     children.back()->parent = this;
   }
 
 protected:
   /// This methods calculates and returns the Model-View-Projection matrix
-  const glm::mat4 CalculateMVP(const glm::mat4 &projection,
-                               const glm::mat4 &view) {
+  const glm::mat4 CalculateMVP(const glm::mat4 &PV) {
 
-    glm::mat4 TRS{1.0f};
-
-    TRS = glm::translate(TRS, transform.position);
-    TRS = glm::rotate(TRS, angle(transform.rotation), axis(transform.rotation));
-    TRS = glm::scale(TRS, transform.scale);
-
-    if (parent == nullptr) {
-      return projection * view * TRS;
-    }
-
-    return parent->CalculateMVP(projection, view) * projection * view * TRS;
+    return PV * transform.CalculateTRS();
   }
 };
