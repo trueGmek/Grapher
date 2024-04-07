@@ -15,7 +15,7 @@ static std::unique_ptr<Primitive> SceneProvider::GetSamleScene() {
 
   auto root = std::make_unique<Square>();
   root->color = glm::vec4(0.25f);
-  root->transform.scale = glm::vec3(2);
+  root->transform.scale = glm::vec3(1.5);
 
   auto point = std::make_unique<Point>();
   point->color = glm::vec4(0.0f);
@@ -24,14 +24,14 @@ static std::unique_ptr<Primitive> SceneProvider::GetSamleScene() {
   auto triangle = std::make_shared<Triangle>();
   triangle->color = glm::vec4(1.0, 0.0, 0.0, 1.0);
 
-  auto x_line = std::make_shared<Line>(glm::vec3(-1.0, 0.0, 0.0),
-                                       glm::vec3(1.0, 0.0, 0.0));
+  auto x_line = std::make_shared<Line>(glm::vec3(-0.5, 0.0, 0.0),
+                                       glm::vec3(0.5, 0.0, 0.0));
 
-  auto y_line = std::make_shared<Line>(glm::vec3(0.0, -1.0, 0.0),
-                                       glm::vec3(0.0, 1.0, 0.0));
+  auto y_line = std::make_shared<Line>(glm::vec3(0.0, -0.5, 0.0),
+                                       glm::vec3(0.0, 0.5, 0.0));
 
-  auto z_line = std::make_shared<Line>(glm::vec3(0.0, 0.0, -1.0),
-                                       glm::vec3(0.0, 0.0, 1.0));
+  auto z_line = std::make_shared<Line>(glm::vec3(0.0, 0.0, -0.5),
+                                       glm::vec3(0.0, 0.0, 0.5));
 
   root->AddChild(triangle);
   triangle->AddChild(std::move(point));
