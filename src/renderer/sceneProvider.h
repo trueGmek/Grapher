@@ -10,8 +10,6 @@ namespace SceneProvider {
 static std::unique_ptr<Primitive> GetSamleScene();
 
 } // namespace SceneProvider
-//
-//
 
 static std::unique_ptr<Primitive> SceneProvider::GetSamleScene() {
 
