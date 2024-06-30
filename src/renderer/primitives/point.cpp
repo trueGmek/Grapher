@@ -6,7 +6,8 @@
 
 const std::string VERTEX_SHADER_PATH{"../resources/shaders/point.vert"};
 const std::string FRAGMENT_SHADER_PATH{"../resources/shaders/point.frag"};
-const std::string GEOMETRY_SHADER_PATH{"../resources/shaders/point.geom"};
+const std::string GEOMETRY_SHADER_PATH{"../resources/shaders/emmit_sin.geom"};
+
 
 Point::Point()
     : Primitive(VERTEX_SHADER_PATH, FRAGMENT_SHADER_PATH,
