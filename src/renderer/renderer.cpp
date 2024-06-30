@@ -2,6 +2,7 @@
 
 #include "renderer.h"
 
+#include <GL/gl.h>
 #include <GLFW/glfw3.h>
 #include <glm/detail/qualifier.hpp>
 #include <glm/ext/matrix_float4x4.hpp>
@@ -55,10 +56,16 @@ bool Renderer::Initialize() {
   glViewport(0, 0, start_width, start_height);
   glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-  canvas = std::shared_ptr(SceneProvider::GetSamleScene());
+  canvas = std::shared_ptr(SceneProvider::GetWorkingScene());
 
   ui = GUI();
 
+  if (drawWireFrame) {
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+  } else {
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+  }
   return true;
 }
 
@@ -78,6 +85,7 @@ void Renderer::Update() {
   glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
   glClear(GL_COLOR_BUFFER_BIT);
+
   RenderScene(canvas);
 
   ImGui::Render();
@@ -90,6 +98,7 @@ void Renderer::Update() {
 void Renderer::RenderScene(const std::shared_ptr<Primitive> &root) {
   auto PV = projection * view;
   root->DrawRecursive(PV);
+  root->shader.SetFloatUniform("time", glfwGetTime());
 }
 
 bool Renderer::CreateWindow() {

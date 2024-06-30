@@ -1,7 +1,6 @@
 #pragma once
 
 #include "primitives/primitive.h"
-#include <cstddef>
 #include <glm/ext/vector_float4.hpp>
 
 class Point : public Primitive {

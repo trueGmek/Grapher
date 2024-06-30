@@ -3,11 +3,13 @@
 #include "primitives/primitive.h"
 #include "primitives/square.h"
 #include "primitives/triangle.h"
+#include <glm/ext/vector_float3.hpp>
 #include <memory>
 
 namespace SceneProvider {
 
 static std::unique_ptr<Primitive> GetSamleScene();
+static std::unique_ptr<Primitive> GetWorkingScene();
 
 } // namespace SceneProvider
 
@@ -39,5 +41,18 @@ static std::unique_ptr<Primitive> SceneProvider::GetSamleScene() {
   root->AddChild(y_line);
   root->AddChild(z_line);
 
+  return root;
+}
+
+static std::unique_ptr<Primitive> SceneProvider::GetWorkingScene() {
+  auto root = std::make_unique<Point>();
+  root->color = glm::vec4(0.0f);
+  root->size = 10;
+
+  // auto point = std::make_shared<Point>();
+  // point->transform.position += glm::vec3(0, 0.5, 0);
+  // point->color = glm::vec4(0.0f);
+  // point->size = 5;
+  // root->AddChild(point);
   return root;
 }

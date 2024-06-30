@@ -1,7 +1,8 @@
 #include "shader.h"
 #include "glm/gtc/type_ptr.hpp"
 
-#include <filesystem>
+#include <GL/gl.h>
+#include <cassert>
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -30,6 +31,59 @@ Shader::Shader(const std::string &vertexShaderPath,
   delete fragmentCode;
 }
 
+Shader::Shader(const std::string &vertexShaderPath,
+               const std::string &fragmentShaderPath,
+               const std::string &geometryShaderPath) {
+
+  const std::string *vertexCode = ReadShader(vertexShaderPath);
+  const std::string *geometryCode = ReadShader(geometryShaderPath);
+  const std::string *fragmentCode = ReadShader(fragmentShaderPath);
+
+  assert(vertexCode != nullptr);
+  assert(geometryCode != nullptr);
+  assert(fragmentCode != nullptr);
+
+  unsigned int vertex, fragment, geometry;
+  LoadShader(&vertex, GL_VERTEX_SHADER, *vertexCode, vertexShaderPath);
+  LoadShader(&geometry, GL_GEOMETRY_SHADER, *geometryCode, geometryShaderPath);
+  LoadShader(&fragment, GL_FRAGMENT_SHADER, *fragmentCode, fragmentShaderPath);
+
+  ID = glCreateProgram();
+
+  glAttachShader(ID, vertex);
+  glAttachShader(ID, geometry);
+  glAttachShader(ID, fragment);
+
+  glLinkProgram(ID);
+
+  CheckLinking(ID);
+
+  glDeleteShader(vertex);
+  glDeleteShader(geometry);
+  glDeleteShader(fragment);
+
+  delete vertexCode;
+  delete geometryCode;
+  delete fragmentCode;
+}
+
+void Shader::AttachGeometryShader(const std::string &path) {
+
+  const std::string *shaderCode = ReadShader(path);
+
+  unsigned int geometry;
+  LoadShader(&geometry, GL_GEOMETRY_SHADER, *shaderCode, path);
+
+  glAttachShader(ID, geometry);
+  glLinkProgram(ID);
+
+  CheckLinking(ID);
+
+  glDeleteShader(geometry);
+
+  delete shaderCode;
+}
+
 std::string *Shader::ReadShader(const std::string &pathToShader) {
   auto *code{new std::string()};
   std::ifstream fileStream;
@@ -52,13 +106,28 @@ std::string *Shader::ReadShader(const std::string &pathToShader) {
   return nullptr;
 }
 
+std::string GetShaderDescription(GLenum type) {
+  switch (type) {
+  case GL_FRAGMENT_SHADER:
+    return "FRAGMENT_SHADER";
+
+  case GL_VERTEX_SHADER:
+    return "VERTEX SHADER";
+
+  case GL_GEOMETRY_SHADER:
+    return "GEOMETRY SHADER";
+  }
+
+  return "UNKNOWN SHADER TYPE";
+}
+
 void Shader::LoadShader(unsigned int *shader, GLenum type,
                         const std::string &shaderSource,
                         const std::string &path) {
-  std::string typeString =
-      type == GL_FRAGMENT_SHADER ? "GL_FRAGMENT_SHADER" : "GL_VERTEX_SHADER";
 
-  if (!CompileShader(shader, type, shaderSource)) {
+  std::string typeString = GetShaderDescription(type);
+
+  if (CompileShader(shader, type, shaderSource) == false) {
     char infoLog[512];
     glGetShaderInfoLog(*shader, 512, nullptr, infoLog);
     std::cout << path << std::endl;
@@ -93,6 +162,8 @@ void Shader::CheckLinking(unsigned int id) const {
     glGetProgramInfoLog(ID, 512, nullptr, infoLog);
     std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n"
               << infoLog << std::endl;
+  } else {
+    std::cout << "NO ISSUE WHILE LINKING" << std::endl;
   }
 }
 
@@ -104,6 +175,10 @@ void Shader::SetMat4Uniform(const std::string &name, glm::mat4 value) const {
 void Shader::SetVec4Uniform(const std::string &name, glm::vec4 value) const {
   glUniform4f(glGetUniformLocation(ID, name.c_str()), value.x, value.y, value.z,
               value.w);
+}
+
+void Shader::SetFloatUniform(const std::string &name, float value) const {
+  glUniform1f(glad_glGetUniformLocation(ID, name.c_str()), value);
 }
 
 void Shader::SetVec3Uniform(const std::string &name, glm::vec3 value) const {

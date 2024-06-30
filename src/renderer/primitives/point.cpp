@@ -6,8 +6,11 @@
 
 const std::string VERTEX_SHADER_PATH{"../resources/shaders/point.vert"};
 const std::string FRAGMENT_SHADER_PATH{"../resources/shaders/point.frag"};
+const std::string GEOMETRY_SHADER_PATH{"../resources/shaders/point.geom"};
 
-Point::Point() : Primitive(VERTEX_SHADER_PATH, FRAGMENT_SHADER_PATH) {
+Point::Point()
+    : Primitive(VERTEX_SHADER_PATH, FRAGMENT_SHADER_PATH,
+                GEOMETRY_SHADER_PATH) {
 
   glGenVertexArrays(1, &VAO);
   glGenBuffers(1, &VBO);

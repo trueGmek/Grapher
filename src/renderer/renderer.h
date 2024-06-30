@@ -16,6 +16,8 @@ public:
   glm::mat4 view{1.0f};
   glm::mat4 projection{1.0f};
 
+  bool drawWireFrame = false;
+
   constexpr static const float start_width = 1600;
   constexpr static const float start_height = 1200;
 

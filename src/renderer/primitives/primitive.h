@@ -9,22 +9,24 @@
 
 #include "transform.h"
 
-class Primitive : std::enable_shared_from_this<Primitive> {
+class Primitive {
 public:
   Transform transform;
-
-  std::vector<std::shared_ptr<Primitive>> children{};
+  Shader shader;
 
   Primitive *parent;
+  std::vector<std::shared_ptr<Primitive>> children{};
 
 protected:
   unsigned int VBO, VAO;
 
-  Shader shader;
-
 public:
   Primitive(auto vertexShaderPath, auto fragmentShaderPath)
       : shader(vertexShaderPath, fragmentShaderPath) {}
+
+  Primitive(auto vertexShaderPath, auto fragmentShaderPath,
+            auto geometryShaderPath)
+      : shader(vertexShaderPath, fragmentShaderPath, geometryShaderPath) {}
 
   virtual void Draw(const glm::mat4 &PV) = 0;
 
@@ -45,7 +47,6 @@ public:
 protected:
   /// This methods calculates and returns the Model-View-Projection matrix
   const glm::mat4 CalculateMVP(const glm::mat4 &PV) {
-
     return PV * transform.CalculateTRS();
   }
 };
