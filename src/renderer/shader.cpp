@@ -2,6 +2,7 @@
 #include "glm/gtc/type_ptr.hpp"
 
 #include <GL/gl.h>
+#include <GLFW/glfw3.h>
 #include <cassert>
 #include <fstream>
 #include <iostream>

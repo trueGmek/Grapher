@@ -3,7 +3,7 @@
 layout(points) in;
 layout(points, max_vertices = 32) out;
 
-uniform float time;
+uniform float uTime;
 
 in VS_OUT {
     vec4 color;
@@ -17,14 +17,13 @@ const float y_scale = 0.85;
 
 void main() {
     fragColor = gs_in[0].color;
-
     float fVertices = float(vertices);
     float unit = 2 / fVertices;
     float offset = -0.5 * unit * fVertices + 0.5 * unit;
 
     for (int i = 0; i < vertices; i++) {
         float x = offset + (i * unit);
-        float y = y_scale * sin(x_scale * x + time);
+        float y = y_scale * sin(x_scale * x + uTime);
         gl_Position = gl_in[0].gl_Position + vec4(x, y, 0.0, 0.0);
         EmitVertex();
     }

@@ -1,3 +1,4 @@
+#include "graph/graph.h"
 #include "primitives/line.h"
 #include "primitives/point.h"
 #include "primitives/primitive.h"
@@ -45,14 +46,8 @@ static std::unique_ptr<Primitive> SceneProvider::GetSamleScene() {
 }
 
 static std::unique_ptr<Primitive> SceneProvider::GetWorkingScene() {
-  auto root = std::make_unique<Point>();
+  auto root = std::make_unique<Graph>();
   root->color = glm::vec4(0.0f);
   root->size = 10;
-
-  // auto point = std::make_shared<Point>();
-  // point->transform.position += glm::vec3(0, 0.5, 0);
-  // point->color = glm::vec4(0.0f);
-  // point->size = 5;
-  // root->AddChild(point);
   return root;
 }

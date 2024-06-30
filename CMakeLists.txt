@@ -14,6 +14,12 @@ find_package(glm CONFIG REQUIRED)
 find_package(glad CONFIG REQUIRED)
 find_package(glfw3 CONFIG REQUIRED)
 
+# UTILS LIBRARY
+set(UTILS_SOURCES src/utils/constants.cpp)
+add_library(utils ${UTILS_SOURCES})
+target_include_directories(
+  utils PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/utils>)
+
 # CONFIGURE RENDERER LIBRARY
 set(RENDERER_SOURCES
     src/renderer/shader.cpp
@@ -31,6 +37,8 @@ set(RENDERER_SOURCES
     src/renderer/primitives/point.cpp
     src/renderer/primitives/line.h
     src/renderer/primitives/line.cpp
+    src/renderer/graph/graph.cpp
+    src/renderer/graph/graph.cpp
     src/renderer/transform.h
     src/renderer/sceneProvider.h)
 
@@ -39,6 +47,7 @@ add_library(renderer ${RENDERER_SOURCES})
 target_include_directories(
   renderer PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/renderer>)
 
+target_link_libraries(renderer PRIVATE utils)
 target_link_libraries(renderer PRIVATE glad::glad)
 target_link_libraries(renderer PRIVATE glm::glm)
 target_link_libraries(renderer PRIVATE imgui::imgui)

@@ -34,11 +34,4 @@ private:
 
   static std::string *ReadShader(const std::string &pathToShader);
   void CheckLinking(unsigned int id) const;
-
-public:
-  class Keywords {
-  public:
-    static constexpr char MVP[] = "MVP";
-    static constexpr char Color[] = "uColor";
-  };
 };

@@ -1,6 +1,8 @@
 #include "square.h"
 #include "primitives/primitive.h"
 
+#include "constants.cpp"
+
 #include <glm/ext/matrix_float4x4.hpp>
 #include <glm/ext/vector_float3.hpp>
 
@@ -28,8 +30,8 @@ Square::Square() : Primitive(VERTEX_SHADER_PATH, FRAG_SHADER_PATH) {
 void Square::Draw(const glm::mat4 &PV) {
 
   shader.Use();
-  shader.SetMat4Uniform(Shader::Keywords::MVP, CalculateMVP(PV));
-  shader.SetVec4Uniform(Shader::Keywords::Color, color);
+  shader.SetMat4Uniform(constants::shader::MVP, CalculateMVP(PV));
+  shader.SetVec4Uniform(constants::shader::color, color);
   glBindVertexArray(VAO);
 
   glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);

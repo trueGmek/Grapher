@@ -20,6 +20,8 @@
 #include "primitives/primitive.h"
 #include "sceneProvider.h"
 
+#include "../utils/constants.cpp"
+
 #include <iostream>
 #include <memory>
 #include <ostream>
@@ -56,7 +58,7 @@ bool Renderer::Initialize() {
   glViewport(0, 0, start_width, start_height);
   glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-  canvas = std::shared_ptr(SceneProvider::GetWorkingScene());
+  root = std::shared_ptr(SceneProvider::GetWorkingScene());
 
   ui = GUI();
 
@@ -68,6 +70,8 @@ bool Renderer::Initialize() {
   }
   return true;
 }
+
+glm::vec4 color;
 
 void Renderer::Update() {
 
@@ -86,7 +90,8 @@ void Renderer::Update() {
 
   glClear(GL_COLOR_BUFFER_BIT);
 
-  RenderScene(canvas);
+  RenderScene(root);
+  ui.DrawColorWindow(color);
 
   ImGui::Render();
   ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -97,8 +102,8 @@ void Renderer::Update() {
 
 void Renderer::RenderScene(const std::shared_ptr<Primitive> &root) {
   auto PV = projection * view;
+  root->shader.SetFloatUniform(constants::shader::time, glfwGetTime());
   root->DrawRecursive(PV);
-  root->shader.SetFloatUniform("time", glfwGetTime());
 }
 
 bool Renderer::CreateWindow() {

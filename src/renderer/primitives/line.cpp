@@ -1,5 +1,6 @@
 
 #include "line.h"
+#include "constants.cpp"
 
 #include <GL/gl.h>
 #include <glm/ext/matrix_float4x4.hpp>
@@ -30,8 +31,8 @@ Line::Line(glm::vec3 start, glm::vec3 end)
 
 void Line::Draw(const glm::mat4 &PV) {
   shader.Use();
-  shader.SetMat4Uniform(Shader::Keywords::MVP, CalculateMVP(PV));
-  shader.SetVec4Uniform(Shader::Keywords::Color, color);
+  shader.SetMat4Uniform(constants::shader::MVP, CalculateMVP(PV));
+  shader.SetVec4Uniform(constants::shader::color, color);
   glBindVertexArray(VAO);
 
   glDrawArrays(GL_LINES, 0, 2);

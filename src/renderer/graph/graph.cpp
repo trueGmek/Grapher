@@ -1,16 +1,13 @@
-#include "point.h"
+#include "graph.h"
 
-#include <GL/gl.h>
-#include <glm/ext/matrix_float4x4.hpp>
-#include <glm/ext/vector_float3.hpp>
 #include "constants.cpp"
 
 const std::string VERTEX_SHADER_PATH{"../resources/shaders/point.vert"};
 const std::string FRAGMENT_SHADER_PATH{"../resources/shaders/point.frag"};
+const std::string GEOMETRY_SHADER_PATH{"../resources/shaders/emmit_sin.geom"};
 
-
-Point::Point()
-    : Primitive(VERTEX_SHADER_PATH, FRAGMENT_SHADER_PATH) {
+Graph::Graph()
+    : Primitive(VERTEX_SHADER_PATH, FRAGMENT_SHADER_PATH, GEOMETRY_SHADER_PATH) {
 
   glGenVertexArrays(1, &VAO);
   glGenBuffers(1, &VBO);
@@ -28,7 +25,7 @@ Point::Point()
   glBindVertexArray(0);
 };
 
-void Point::Draw(const glm::mat4 &PV) {
+void Graph::Draw(const glm::mat4 &PV) {
 
   shader.Use();
   shader.SetMat4Uniform(constants::shader::MVP, CalculateMVP(PV));

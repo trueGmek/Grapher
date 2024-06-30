@@ -1,4 +1,5 @@
 #include "triangle.h"
+#include "constants.cpp"
 
 const std::string VERTEX_SHADER_PATH{"../resources/shaders/triangle.vert"};
 const std::string FRAG_SHADER_PATH{"../resources/shaders/triangle.frag"};
@@ -18,12 +19,12 @@ Triangle::Triangle() : Primitive(VERTEX_SHADER_PATH, FRAG_SHADER_PATH) {
 }
 
 void Triangle::Draw(const glm::mat4 &PV) {
-
   shader.Use();
-  shader.SetMat4Uniform(Shader::Keywords::MVP, CalculateMVP(PV));
-  shader.SetVec4Uniform(Shader::Keywords::Color, color);
+  shader.SetMat4Uniform(constants::shader::MVP, CalculateMVP(PV));
+  shader.SetVec4Uniform(constants::shader::color, color);
 
   glBindVertexArray(VAO);
+
   glDrawArrays(GL_TRIANGLES, 0, 3);
 
   glBindVertexArray(0);

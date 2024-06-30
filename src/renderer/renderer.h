@@ -31,7 +31,7 @@ private:
   bool CreateWindow();
   void RenderScene(const std::shared_ptr<Primitive> &root);
 
-  std::shared_ptr<Primitive> canvas;
+  std::shared_ptr<Primitive> root;
 };
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
