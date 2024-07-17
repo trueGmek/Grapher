@@ -1,12 +1,17 @@
+#pragma once
 #include <string>
-// TODO: TO ITS OWN PACKAGE IN CMAKE
 namespace constants {
 
 class shader {
 public:
-  inline static const std::string time{"uTime"};
-  inline static const std::string color{"uColor"};
+  //
   inline static const std::string MVP{"MVP"};
+  //
+  inline static const std::string time{"uTime"};
+  inline static const std::string frequency{"uFrequency"};
+  inline static const std::string speed{"uSpeed"};
+  inline static const std::string amplitude{"uAmplitude"};
+  inline static const std::string color{"uColor"};
 
   shader() = delete;
 };

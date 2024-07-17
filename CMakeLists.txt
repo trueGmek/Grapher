@@ -40,7 +40,8 @@ set(RENDERER_SOURCES
     src/renderer/graph/graph.cpp
     src/renderer/graph/graph.cpp
     src/renderer/transform.h
-    src/renderer/sceneProvider.h)
+    src/renderer/sceneProvider.h
+    src/renderer/GUI/graphView.h)
 
 add_library(renderer ${RENDERER_SOURCES})
 

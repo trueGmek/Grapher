@@ -2,6 +2,8 @@
 
 #include "renderer.h"
 
+#include "GUI/GUI.h"
+#include "GUI/graphView.h"
 #include <GL/gl.h>
 #include <GLFW/glfw3.h>
 #include <glm/detail/qualifier.hpp>
@@ -17,6 +19,7 @@
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
 
+#include "graph/graph.h"
 #include "primitives/primitive.h"
 #include "sceneProvider.h"
 
@@ -27,6 +30,10 @@
 #include <ostream>
 
 #define GLM_ENABLE_EXPERIMENTAL
+
+std::shared_ptr<Graph> root;
+
+GraphView graphView;
 
 bool Renderer::Initialize() {
 
@@ -57,10 +64,10 @@ bool Renderer::Initialize() {
 
   glViewport(0, 0, start_width, start_height);
   glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+  glfwSetScrollCallback(window, this.inside_scroll_callback);
 
-  root = std::shared_ptr(SceneProvider::GetWorkingScene());
-
-  ui = GUI();
+  root = std::shared_ptr(SceneProvider::GetGraph());
+  graphView = GraphView(root);
 
   if (drawWireFrame) {
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -71,14 +78,19 @@ bool Renderer::Initialize() {
   return true;
 }
 
-glm::vec4 color;
-
 void Renderer::Update() {
 
   float aspect = Renderer::start_width / Renderer::start_height;
 
   projection = glm::ortho(-aspect, aspect, -1.0f, 1.0f, 0.1f, 10.0f);
-  view = glm::translate(glm::mat4{1.0f}, glm::vec3{0, 0, -1});
+  // view = glm::translate(glm::mat4{1.0f}, camera_position);
+
+  float camX = sin(azimuth) * cos(polar) * radius;
+  float camY = sin(azimuth) * sin(polar) * radius;
+  float camZ = cos(azimuth) * radius;
+
+  view = glm::lookAt(glm::vec3(camX, camY, camZ), glm::vec3(0.0, 0.0, 0.0),
+                     glm::vec3(0.0, 1.0, 0.0));
 
   ProcessEvents();
 
@@ -90,8 +102,9 @@ void Renderer::Update() {
 
   glClear(GL_COLOR_BUFFER_BIT);
 
+  graphView.Draw();
+  graphView.SetDataOnGraph();
   RenderScene(root);
-  ui.DrawColorWindow(color);
 
   ImGui::Render();
   ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -118,13 +131,6 @@ bool Renderer::CreateWindow() {
   return true;
 }
 
-// TODO: CREATE A FUNCTION IN A SEPARATE FILE FOR INPUT
-void Renderer::ProcessEvents() {
-  if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
-    glfwSetWindowShouldClose(window, true);
-  }
-}
-
 void Renderer::Finalize() {
   ImGui_ImplOpenGL3_Shutdown();
   ImGui_ImplGlfw_Shutdown();
@@ -132,6 +138,15 @@ void Renderer::Finalize() {
 
   glfwTerminate();
 }
+
+// TODO: CREATE A FUNCTION IN A SEPARATE FILE FOR INPUT
+void Renderer::ProcessEvents() {
+  if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+    glfwSetWindowShouldClose(window, true);
+  }
+}
+void Renderer::inside_scroll_callback(GLFWwindow *window, double xoffset,
+                                      double yoffset) {}
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
   glViewport(0, 0, width, height);

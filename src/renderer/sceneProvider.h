@@ -11,6 +11,7 @@ namespace SceneProvider {
 
 static std::unique_ptr<Primitive> GetSamleScene();
 static std::unique_ptr<Primitive> GetWorkingScene();
+static std::unique_ptr<Graph> GetGraph();
 
 } // namespace SceneProvider
 
@@ -47,7 +48,12 @@ static std::unique_ptr<Primitive> SceneProvider::GetSamleScene() {
 
 static std::unique_ptr<Primitive> SceneProvider::GetWorkingScene() {
   auto root = std::make_unique<Graph>();
-  root->color = glm::vec4(0.0f);
+  root->size = 10;
+  return root;
+}
+
+static std::unique_ptr<Graph> SceneProvider::GetGraph() {
+  auto root = std::make_unique<Graph>();
   root->size = 10;
   return root;
 }

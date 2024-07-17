@@ -1,8 +1,11 @@
 #pragma once
-#include "GUI/GUI.h"
 #include "primitives/primitive.h"
 #include <GLFW/glfw3.h>
 #include <glm/ext/matrix_float4x4.hpp>
+#include <glm/ext/quaternion_float.hpp>
+#include <glm/ext/vector_float3.hpp>
+#include <glm/ext/vector_float4.hpp>
+#include <glm/gtc/quaternion.hpp>
 #include <memory>
 
 class Renderer {
@@ -22,8 +25,10 @@ public:
   constexpr static const float start_height = 1200;
 
 private:
-  GUI ui;
   unsigned int VBO, VAO;
+  float azimuth{};
+  float polar{};
+  float radius = 3.0f;
 
   GLFWwindow *window = nullptr;
 
@@ -31,7 +36,9 @@ private:
   bool CreateWindow();
   void RenderScene(const std::shared_ptr<Primitive> &root);
 
-  std::shared_ptr<Primitive> root;
+  void inside_scroll_callback(GLFWwindow *window, double xoffset,
+                              double yoffset);
 };
 
+void scroll_callback(GLFWwindow *window, double xoffset, double yoffset);
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
