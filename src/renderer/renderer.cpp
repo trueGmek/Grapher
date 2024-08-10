@@ -1,9 +1,11 @@
-#include "glad/glad.h"
-
 #include "renderer.h"
-
+#include "../utils/constants.cpp"
 #include "GUI/GUI.h"
 #include "GUI/graphView.h"
+#include "glad/glad.h"
+#include "input.h"
+#include "primitives/primitive.h"
+#include "sceneProvider.h"
 #include <GL/gl.h>
 #include <GLFW/glfw3.h>
 #include <glm/detail/qualifier.hpp>
@@ -11,6 +13,7 @@
 #include <glm/ext/matrix_transform.hpp>
 #include <glm/ext/quaternion_float.hpp>
 #include <glm/ext/quaternion_transform.hpp>
+#include <glm/ext/vector_float2.hpp>
 #include <glm/ext/vector_float3.hpp>
 #include <glm/ext/vector_float4.hpp>
 #include <glm/gtc/constants.hpp>
@@ -18,25 +21,19 @@
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
-
-#include "graph/graph.h"
-#include "primitives/primitive.h"
-#include "sceneProvider.h"
-
-#include "../utils/constants.cpp"
-
 #include <iostream>
 #include <memory>
 #include <ostream>
 
 #define GLM_ENABLE_EXPERIMENTAL
 
-std::shared_ptr<Graph> root;
-
+std::shared_ptr<Primitive> root;
 GraphView graphView;
 
-bool Renderer::Initialize() {
+Renderer::Renderer(std::shared_ptr<Camera> camera)
+    : camera(std::shared_ptr<Camera>(camera)) {}
 
+bool Renderer::Initialize() {
   glfwInit();
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -64,10 +61,12 @@ bool Renderer::Initialize() {
 
   glViewport(0, 0, start_width, start_height);
   glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-  glfwSetScrollCallback(window, this.inside_scroll_callback);
+  std::shared_ptr<Graph> graph = SceneProvider::GetGraph();
 
-  root = std::shared_ptr(SceneProvider::GetGraph());
-  graphView = GraphView(root);
+  root = std::shared_ptr(SceneProvider::GetSamleScene());
+
+  // TODO: GET THIS FROM HERE
+  graphView = GraphView(graph);
 
   if (drawWireFrame) {
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -75,22 +74,11 @@ bool Renderer::Initialize() {
   } else {
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
   }
+
   return true;
 }
 
 void Renderer::Update() {
-
-  float aspect = Renderer::start_width / Renderer::start_height;
-
-  projection = glm::ortho(-aspect, aspect, -1.0f, 1.0f, 0.1f, 10.0f);
-  // view = glm::translate(glm::mat4{1.0f}, camera_position);
-
-  float camX = sin(azimuth) * cos(polar) * radius;
-  float camY = sin(azimuth) * sin(polar) * radius;
-  float camZ = cos(azimuth) * radius;
-
-  view = glm::lookAt(glm::vec3(camX, camY, camZ), glm::vec3(0.0, 0.0, 0.0),
-                     glm::vec3(0.0, 1.0, 0.0));
 
   ProcessEvents();
 
@@ -114,9 +102,8 @@ void Renderer::Update() {
 }
 
 void Renderer::RenderScene(const std::shared_ptr<Primitive> &root) {
-  auto PV = projection * view;
   root->shader.SetFloatUniform(constants::shader::time, glfwGetTime());
-  root->DrawRecursive(PV);
+  root->DrawRecursive(camera->GetPVMatrix());
 }
 
 bool Renderer::CreateWindow() {
@@ -127,6 +114,8 @@ bool Renderer::CreateWindow() {
     glfwTerminate();
     return false;
   }
+
+  Input::window = window;
 
   return true;
 }
@@ -140,13 +129,12 @@ void Renderer::Finalize() {
 }
 
 // TODO: CREATE A FUNCTION IN A SEPARATE FILE FOR INPUT
+// TODO: ADD A WRAPPER FOR GlfwWindow THAT WOULD HAVE SUCH FUNCTIONALITY
 void Renderer::ProcessEvents() {
   if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
     glfwSetWindowShouldClose(window, true);
   }
 }
-void Renderer::inside_scroll_callback(GLFWwindow *window, double xoffset,
-                                      double yoffset) {}
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
   glViewport(0, 0, width, height);

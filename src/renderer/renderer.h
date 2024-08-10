@@ -1,4 +1,5 @@
 #pragma once
+#include "camera/camera.h"
 #include "primitives/primitive.h"
 #include <GLFW/glfw3.h>
 #include <glm/ext/matrix_float4x4.hpp>
@@ -10,35 +11,28 @@
 
 class Renderer {
 public:
-  bool Initialize();
-  void Update();
-  void Finalize();
-
-  bool IsClosing() { return glfwWindowShouldClose(window); }
-
-  glm::mat4 view{1.0f};
-  glm::mat4 projection{1.0f};
-
-  bool drawWireFrame = false;
-
   constexpr static const float start_width = 1600;
   constexpr static const float start_height = 1200;
 
+  bool drawWireFrame = false;
+
 private:
   unsigned int VBO, VAO;
-  float azimuth{};
-  float polar{};
-  float radius = 3.0f;
+  std::shared_ptr<Camera> camera;
+  GLFWwindow *window;
 
-  GLFWwindow *window = nullptr;
+public:
+  Renderer(std::shared_ptr<Camera> camera);
 
+  bool Initialize();
+  void Update();
+  void Finalize();
+  bool IsClosing() { return glfwWindowShouldClose(window); }
+
+private:
   void ProcessEvents();
   bool CreateWindow();
   void RenderScene(const std::shared_ptr<Primitive> &root);
-
-  void inside_scroll_callback(GLFWwindow *window, double xoffset,
-                              double yoffset);
 };
 
-void scroll_callback(GLFWwindow *window, double xoffset, double yoffset);
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);

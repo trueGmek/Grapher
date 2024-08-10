@@ -38,10 +38,13 @@ set(RENDERER_SOURCES
     src/renderer/primitives/line.h
     src/renderer/primitives/line.cpp
     src/renderer/graph/graph.cpp
-    src/renderer/graph/graph.cpp
+    src/renderer/graph/graph.h
+    src/renderer/camera/camera.h
+    src/renderer/camera/camera.cpp
     src/renderer/transform.h
     src/renderer/sceneProvider.h
-    src/renderer/GUI/graphView.h)
+    src/renderer/GUI/graphView.h
+    src/renderer/input.h)
 
 add_library(renderer ${RENDERER_SOURCES})
 
@@ -60,7 +63,8 @@ project(
   DESCRIPTION "Grapher"
   LANGUAGES CXX)
 
-set(PROJECT_FILES src/main.cpp)
+set(PROJECT_FILES src/main.cpp src/cameraController/cameraController.h
+                  src/cameraController/cameraController.cpp)
 add_executable(${PROJECT_NAME} ${PROJECT_FILES})
 
 target_link_libraries(${PROJECT_NAME} PRIVATE glad::glad)
