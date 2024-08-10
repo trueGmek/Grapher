@@ -6,16 +6,12 @@
 #include <glm/ext/vector_float3.hpp>
 #include <glm/geometric.hpp>
 #include <glm/gtc/quaternion.hpp>
-#include <iostream>
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/string_cast.hpp>
 
 CameraController::CameraController(std::shared_ptr<Camera> camera)
-    : camera(std::shared_ptr(camera)) {
-  phi = glm::radians(90.0);
-  theta = glm::radians(90.0);
-}
+    : camera(std::shared_ptr(camera)) {}
 
 void CameraController::Tick() {
   CalculateAngles();
@@ -48,32 +44,15 @@ void CameraController::CalculateAngles() {
 
     phi += cam_speed.y * delta.x;
     theta += cam_speed.x * delta.y;
-
-    std::cout << "theta: " << glm::round(glm::degrees(theta))
-              << " phi: " << glm::round(glm::degrees(phi)) << std::endl;
-    std::cout << "Camera Position: " << glm::to_string(camera->position)
-              << std::endl;
   }
   int vertical_arrow_input = Input::GetVerticalArrowsValue();
   if (vertical_arrow_input != 0) {
     theta += vertical_arrow_input * cam_speed.y;
-
-    std::cout << "theta: " << glm::round(glm::degrees(theta))
-              << " phi: " << glm::round(glm::degrees(phi)) << std::endl;
-
-    std::cout << "Camera Position: " << glm::to_string(camera->position)
-              << std::endl;
   }
 
   int horizontal_arrow_input = Input::GetHorizontalArrowsValue();
   if (horizontal_arrow_input != 0) {
     phi += horizontal_arrow_input * cam_speed.x;
-
-    std::cout << "theta: " << glm::round(glm::degrees(theta))
-              << " phi: " << glm::round(glm::degrees(phi)) << std::endl;
-
-    std::cout << "Camera Position: " << glm::to_string(camera->position)
-              << std::endl;
   }
 
   prev_cursor_pos = cursor_pos;
