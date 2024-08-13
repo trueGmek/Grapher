@@ -7,7 +7,7 @@
 #include "constants.cpp"
 
 class GraphView {
-public:
+ public:
   std::shared_ptr<Graph> graph;
 
   glm::vec4 color{};
@@ -16,8 +16,8 @@ public:
   float frequency{10};
   float amplitude{0.25};
 
-private:
-public:
+ private:
+ public:
   void Draw() {
     ImGui::Begin("Graph");
 
@@ -47,5 +47,5 @@ public:
   GraphView() : graph({}){};
   GraphView(std::shared_ptr<Graph> graph) : graph(graph){};
 
-private:
+ private:
 };

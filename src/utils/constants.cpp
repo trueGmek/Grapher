@@ -30,6 +30,7 @@ public:
 class vec3 {
 public:
   inline static const glm::vec3 zero{0.0};
+  inline static const glm::vec3 one{1.0};
 
   inline static const glm::vec3 up{0.0, 1.0, 0.0};
   inline static const glm::vec3 down{0.0, -1.0, 0.0};

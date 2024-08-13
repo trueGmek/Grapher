@@ -20,7 +20,8 @@ Graph::Graph() : Primitive(VERTEX_SHADER_PATH, FRAGMENT_SHADER_PATH, GEOMETRY_SH
   glBindVertexArray(VAO);
   glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
-  glBufferData(GL_ARRAY_BUFFER, sizeof(float) * geometryBuffer.size(), geometryBuffer.data(), GL_DYNAMIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(float) * geometryBuffer.size(), geometryBuffer.data(),
+               GL_DYNAMIC_DRAW);
 
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
 
@@ -51,7 +52,6 @@ void Graph::Draw(const glm::mat4 &PV) {
 
 void Graph::GenerateBuffer() {
   geometryBuffer.clear();
-  // TODO: WHAT THE ACTUALL FUCK IS GOING ON HERE
   float point_size_NDC = 2 * vertex_size / Renderer::viewport_width;
   float distance_between_points =
       (distance_between_vertices + point_size_NDC) * vertices_per_point + distance_between_vertices;

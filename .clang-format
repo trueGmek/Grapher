@@ -14,7 +14,7 @@
 # BreakConstructorInitializersBeforeComma: false
 # BreakConstructorInitializers: AfterColon
 # BinPackParameters: true
-ColumnLimit: 120
+ColumnLimit: 110
 BasedOnStyle: Google
 UseTab: Never
 SortIncludes: false
@@ -23,11 +23,11 @@ AlignTrailingComments: true
 Standard: Auto
 IndentWidth: 2
 TabWidth: 2
+MaxEmptyLinesToKeep: 1
 # ConstructorInitializerAllOnOneLineOrOnePerLine: true
 # DerivePointerBinding: false
 # ExperimentalAutoDetectBinPacking: false
 # IndentCaseLabels: true
-# MaxEmptyLinesToKeep: 1
 # NamespaceIndentation: None
 # ObjCSpaceBeforeProtocolList: true
 # PenaltyBreakBeforeFirstCallParameter: 19

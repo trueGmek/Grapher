@@ -5,19 +5,23 @@
 #include <glm/ext/quaternion_float.hpp>
 #include <glm/ext/vector_float3.hpp>
 #include <glm/gtc/constants.hpp>
+
 class Camera {
-public:
+ public:
   glm::vec3 position{glm::zero<glm::vec3>()};
   glm::quat rotation{glm::identity<glm::quat>()};
   float distance{3};
 
-private:
-public:
+ private:
+  const float NEAR{0.01};
+  const float FAR{100};
+
+ public:
   glm::mat4 GetPVMatrix();
 
   void Tick();
 
   Camera();
 
-private:
+ private:
 };

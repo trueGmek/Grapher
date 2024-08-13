@@ -64,13 +64,29 @@ static std::unique_ptr<Primitive> SceneProvider::GetSamleScene() {
   return root;
 }
 
-#define INCLUDE_TIRANGLES 0
+#define INCLUDE_TIRANGLES 1
+#define INCLUDE_POINTS 1
+#define INCLUDE_LINES 1
 
 static std::unique_ptr<Graph> SceneProvider::GetGraph() {
   auto root = std::make_unique<Graph>();
 
+#if INCLUDE_LINES
+
   auto x_line = std::make_shared<Line>(constants::vec3::left, constants::vec3::right);
   x_line->color = constants::colors::blue;
+  root->AddChild(x_line);
+
+  auto y_line = std::make_shared<Line>(constants::vec3::up, constants::vec3::down);
+  y_line->color = constants::colors::green;
+  root->AddChild(y_line);
+
+  auto z_line = std::make_shared<Line>(constants::vec3::forward, constants::vec3::backward);
+  z_line->color = constants::colors::red;
+  root->AddChild(z_line);
+#endif  // INCLUDE_LINES
+
+    #if INCLUDE_POINTS
 
   auto xPoint = std::make_shared<Point>();
   xPoint->transform.position = constants::vec3::left;
@@ -78,34 +94,38 @@ static std::unique_ptr<Graph> SceneProvider::GetGraph() {
   xPoint->color = constants::colors::blue;
   root->AddChild(xPoint);
 
-  auto y_line = std::make_shared<Line>(constants::vec3::up, constants::vec3::down);
-  y_line->color = constants::colors::green;
+  auto yPoint = std::make_shared<Point>();
+  yPoint->transform.position = constants::vec3::up;
+  yPoint->size = 20;
+  yPoint->color = constants::colors::green;
+  root->AddChild(yPoint);
 
-  auto z_line = std::make_shared<Line>(constants::vec3::forward, constants::vec3::backward);
-  z_line->color = constants::colors::red;
+  auto zPoint = std::make_shared<Point>();
+  zPoint->transform.position = constants::vec3::forward;
+  zPoint->size = 20;
+  zPoint->color = constants::colors::red;
+  root->AddChild(zPoint);
+
+#endif  // INCLUDE_POINTS
 
 #if INCLUDE_TIRANGLES
 
   auto xTriangle = std::make_shared<Triangle>();
   xTriangle->color = constants::colors::blue * 0.25f;
   xTriangle->transform.rotation = glm::quat{glm::vec3{0.0, 0.0, glm::radians(-90.0)}};
-  x_line->AddChild(xTriangle);
+  root->AddChild(xTriangle);
 
   auto yTriangle = std::make_shared<Triangle>();
   yTriangle->color = constants::colors::green * 0.25f;
   yTriangle->transform.rotation = glm::quat{glm::vec3{0.0, glm::radians(90.0), 0.0}};
-  y_line->AddChild(yTriangle);
+  root->AddChild(yTriangle);
 
   auto zTriangle = std::make_shared<Triangle>();
   zTriangle->color = constants::colors::red * 0.25f;
   zTriangle->transform.rotation = glm::quat{glm::vec3{glm::radians(90.0), 0.0, 0.0}};
-  z_line->AddChild(zTriangle);
+  root->AddChild(zTriangle);
 
 #endif  // INCLUDE_TIRANGLES
-
-  root->AddChild(x_line);
-  root->AddChild(y_line);
-  root->AddChild(z_line);
 
   return root;
 }

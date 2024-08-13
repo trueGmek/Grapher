@@ -26,7 +26,6 @@ void CameraController::CalculateCameraPosition() {
   float cam_y = sin(theta);
   float cam_z = sin(phi) * cos(theta);
 
-  //TODO: CHANGING THE RADIUS DOES NOT ZOOM IN THE CAMERA
   camera->position = radius * glm::vec3(cam_x, cam_y, cam_z);
   glm::vec3 direction = glm::normalize(camera->position);
   camera->rotation = glm::quatLookAt(direction, glm::vec3(0.0, 1.0, 0.0));

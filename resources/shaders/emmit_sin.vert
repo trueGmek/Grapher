@@ -9,6 +9,6 @@ out VS_OUT {
 } vs_out;
 
 void main() {
-    gl_Position = MVP * vec4(aPos, 1.0f);
+    gl_Position = vec4(aPos, 1.0f);
     vs_out.color = uColor;
 }

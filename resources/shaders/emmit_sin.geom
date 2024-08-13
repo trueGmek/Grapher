@@ -23,11 +23,13 @@ out vec4 fragColor;
 float pointSizeNDC;
 
 vec4 GetPosition(int i, int j) {
-    float z = i * (uUnit);
-    float x = j * uUnit;
-    float y = uAmplitude * sin(uFrequency * z + uSpeed * uTime);
+    vec4 basePosition = gl_in[0].gl_Position;
 
-    return vec4(x, y, z, 0);
+    float z = i * (uUnit + pointSizeNDC) + basePosition.z;
+    float x = j * (uUnit + pointSizeNDC) + basePosition.x;
+    float y = uAmplitude * sin(uFrequency * z + uSpeed * uTime) + basePosition.y;
+
+    return vec4(x, y, z, basePosition.w);
 }
 
 vec4 GetColor(int i, int j) {
@@ -37,11 +39,11 @@ vec4 GetColor(int i, int j) {
 }
 
 void main() {
-    pointSizeNDC = uPointPixelSize / uViewportSize.x;
+    pointSizeNDC = 2 * uPointPixelSize / uViewportSize.x;
 
     for (int i = 0; i < uVertices; i++) {
         gl_PointSize = uPointPixelSize;
-        gl_Position = MVP * GetPosition(i, 0) + gl_in[0].gl_Position;
+        gl_Position = MVP * GetPosition(i, 0);
         fragColor = GetColor(i, 0);
         EmitVertex();
     }

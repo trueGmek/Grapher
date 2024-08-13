@@ -12,7 +12,6 @@ const std::string FRAGMENT_SHADER_PATH{"../resources/shaders/point.frag"};
 Line::Line(const glm::vec3 start, const glm::vec3 end)
     : Primitive(VERTEX_SHADER_PATH, FRAGMENT_SHADER_PATH),
       vertices{start.x, start.y, start.z, end.x, end.y, end.z} {
-
   glGenVertexArrays(1, &VAO);
   glGenBuffers(1, &VBO);
 
