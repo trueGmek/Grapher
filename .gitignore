@@ -48,3 +48,9 @@ build
 *.exe
 *.out
 *.app
+
+#imgui
+imgui.ini
+
+#Clion
+.idea/*

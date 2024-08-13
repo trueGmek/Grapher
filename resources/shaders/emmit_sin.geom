@@ -3,10 +3,16 @@
 layout(points) in;
 layout(points, max_vertices = 32) out;
 
+uniform mat4 MVP;
+
 uniform float uTime;
 uniform float uFrequency;
 uniform float uSpeed;
 uniform float uAmplitude;
+uniform float uVertices;
+uniform float uUnit;
+uniform float uPointPixelSize;
+uniform vec2 uViewportSize;
 
 in VS_OUT {
     vec4 color;
@@ -14,18 +20,29 @@ in VS_OUT {
 
 out vec4 fragColor;
 
-const int vertices = 32;
+float pointSizeNDC;
+
+vec4 GetPosition(int i, int j) {
+    float z = i * (uUnit);
+    float x = j * uUnit;
+    float y = uAmplitude * sin(uFrequency * z + uSpeed * uTime);
+
+    return vec4(x, y, z, 0);
+}
+
+vec4 GetColor(int i, int j) {
+    vec4 baseColor = gs_in[0].color;
+    float offset = float(i) / uVertices;
+    return vec4(offset * baseColor.rgb, baseColor.w);
+}
 
 void main() {
-    float fVertices = float(vertices);
-    float unit = 0.01f;
-    // float offset = -0.5 * unit * fVertices + 0.5 * unit;
+    pointSizeNDC = uPointPixelSize / uViewportSize.x;
 
-    for (int i = 0; i < vertices; i++) {
-        float x = -1.f + (i * unit) + gl_in[0].gl_Position.x;
-        float y = uAmplitude * sin(uFrequency * x + uSpeed * uTime);
-        gl_Position = vec4(x, y, 0.0, 1.0);
-        fragColor = gs_in[0].color;
+    for (int i = 0; i < uVertices; i++) {
+        gl_PointSize = uPointPixelSize;
+        gl_Position = MVP * GetPosition(i, 0) + gl_in[0].gl_Position;
+        fragColor = GetColor(i, 0);
         EmitVertex();
     }
 

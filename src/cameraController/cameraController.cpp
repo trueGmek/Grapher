@@ -6,12 +6,15 @@
 #include <glm/ext/vector_float3.hpp>
 #include <glm/geometric.hpp>
 #include <glm/gtc/quaternion.hpp>
+#include <glm/trigonometric.hpp>
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/string_cast.hpp>
 
 CameraController::CameraController(std::shared_ptr<Camera> camera)
-    : camera(std::shared_ptr(camera)) {}
+    : camera(std::shared_ptr(camera)) {
+  phi = glm::radians(180.0);
+}
 
 void CameraController::Tick() {
   CalculateAngles();
@@ -19,14 +22,11 @@ void CameraController::Tick() {
 }
 
 void CameraController::CalculateCameraPosition() {
-  // JESUS CHRISTUS I'M AN IDIOT
-  // float cam_x = sin(phi) * cos(theta);
-  // float cam_y = sin(phi) * sin(theta);
-  // float cam_z = cos(phi);
   float cam_x = cos(phi) * cos(theta);
   float cam_y = sin(theta);
   float cam_z = sin(phi) * cos(theta);
 
+  //TODO: CHANGING THE RADIUS DOES NOT ZOOM IN THE CAMERA
   camera->position = radius * glm::vec3(cam_x, cam_y, cam_z);
   glm::vec3 direction = glm::normalize(camera->position);
   camera->rotation = glm::quatLookAt(direction, glm::vec3(0.0, 1.0, 0.0));

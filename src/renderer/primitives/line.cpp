@@ -9,7 +9,7 @@
 const std::string VERTEX_SHADER_PATH{"../resources/shaders/point.vert"};
 const std::string FRAGMENT_SHADER_PATH{"../resources/shaders/point.frag"};
 
-Line::Line(glm::vec3 start, glm::vec3 end)
+Line::Line(const glm::vec3 start, const glm::vec3 end)
     : Primitive(VERTEX_SHADER_PATH, FRAGMENT_SHADER_PATH),
       vertices{start.x, start.y, start.z, end.x, end.y, end.z} {
 

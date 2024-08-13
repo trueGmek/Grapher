@@ -20,6 +20,8 @@ add_library(utils ${UTILS_SOURCES})
 target_include_directories(
   utils PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/utils>)
 
+target_link_libraries(utils PRIVATE glm::glm)
+
 # CONFIGURE RENDERER LIBRARY
 set(RENDERER_SOURCES
     src/renderer/shader.cpp

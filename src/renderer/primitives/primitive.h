@@ -1,6 +1,8 @@
 #pragma once
 
+#include "../utils/constants.cpp"
 #include "shader.h"
+#include <GLFW/glfw3.h>
 #include <glm/ext/matrix_float4x4.hpp>
 #include <glm/ext/quaternion_float.hpp>
 #include <glm/ext/vector_float3.hpp>
@@ -30,12 +32,13 @@ public:
 
   virtual void Draw(const glm::mat4 &PV) = 0;
 
-  void DrawRecursive(const glm::mat4 &PV) {
+  void DrawRecursive(const glm::mat4 &PV, float time) {
 
+    shader.SetFloatUniform(constants::shader::time, time);
     Draw(PV);
 
     for (auto child : children) {
-      child->DrawRecursive(PV * transform.CalculateTRS());
+      child->DrawRecursive(PV * transform.CalculateTRS(), time);
     }
   }
 

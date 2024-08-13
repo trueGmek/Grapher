@@ -1,5 +1,4 @@
 #include "renderer.h"
-#include "../utils/constants.cpp"
 #include "GUI/GUI.h"
 #include "GUI/graphView.h"
 #include "glad/glad.h"
@@ -25,13 +24,10 @@
 #include <memory>
 #include <ostream>
 
-#define GLM_ENABLE_EXPERIMENTAL
-
 std::shared_ptr<Primitive> root;
 GraphView graphView;
 
-Renderer::Renderer(std::shared_ptr<Camera> camera)
-    : camera(std::shared_ptr<Camera>(camera)) {}
+Renderer::Renderer(std::shared_ptr<Camera> camera) : camera(std::shared_ptr<Camera>(camera)) {}
 
 bool Renderer::Initialize() {
   glfwInit();
@@ -48,7 +44,7 @@ bool Renderer::Initialize() {
   io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 
   CreateWindow();
-
+  glfwSetWindowUserPointer(window, this);
   glfwMakeContextCurrent(window);
 
   ImGui_ImplGlfw_InitForOpenGL(window, true);
@@ -62,11 +58,12 @@ bool Renderer::Initialize() {
   glViewport(0, 0, start_width, start_height);
   glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
   std::shared_ptr<Graph> graph = SceneProvider::GetGraph();
-
-  root = std::shared_ptr(SceneProvider::GetSamleScene());
-
+  root = graph;
   // TODO: GET THIS FROM HERE
   graphView = GraphView(graph);
+
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
   if (drawWireFrame) {
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -79,7 +76,6 @@ bool Renderer::Initialize() {
 }
 
 void Renderer::Update() {
-
   ProcessEvents();
 
   ImGui_ImplOpenGL3_NewFrame();
@@ -102,8 +98,7 @@ void Renderer::Update() {
 }
 
 void Renderer::RenderScene(const std::shared_ptr<Primitive> &root) {
-  root->shader.SetFloatUniform(constants::shader::time, glfwGetTime());
-  root->DrawRecursive(camera->GetPVMatrix());
+  root->DrawRecursive(camera->GetPVMatrix(), glfwGetTime());
 }
 
 bool Renderer::CreateWindow() {
@@ -117,6 +112,9 @@ bool Renderer::CreateWindow() {
 
   Input::window = window;
 
+  viewport_width = start_width;
+  viewport_height = start_height;
+
   return true;
 }
 
@@ -128,6 +126,8 @@ void Renderer::Finalize() {
   glfwTerminate();
 }
 
+glm::vec2 Renderer::GetViewportSize() { return glm::vec2{viewport_width, viewport_height}; }
+
 // TODO: CREATE A FUNCTION IN A SEPARATE FILE FOR INPUT
 // TODO: ADD A WRAPPER FOR GlfwWindow THAT WOULD HAVE SUCH FUNCTIONALITY
 void Renderer::ProcessEvents() {
@@ -137,5 +137,9 @@ void Renderer::ProcessEvents() {
 }
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
+  auto renderer = (Renderer *)glfwGetWindowUserPointer(window);
   glViewport(0, 0, width, height);
+
+  Renderer::viewport_width = width;
+  Renderer::viewport_height = height;
 }

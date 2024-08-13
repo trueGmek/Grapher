@@ -19,10 +19,11 @@ public:
   void AttachGeometryShader(const std::string &path);
 
   void Use() const;
-  void SetMat4Uniform(const std::string &name, glm::mat4 value) const;
-  void SetVec4Uniform(const std::string &name, glm::vec4 value) const;
-  void SetVec3Uniform(const std::string &name, glm::vec3 value) const;
-  void SetFloatUniform(const std::string &name, float value) const;
+  void SetMat4Uniform(const std::string &name, const glm::mat4 value) const;
+  void SetVec4Uniform(const std::string &name, const glm::vec4 value) const;
+  void SetVec3Uniform(const std::string &name, const glm::vec3 value) const;
+  void SetVec2Uniform(const std::string &name, const glm::vec2 value) const;
+  void SetFloatUniform(const std::string &name,const float value) const;
 
 private:
   static void LoadShader(unsigned int *shader, GLenum type,

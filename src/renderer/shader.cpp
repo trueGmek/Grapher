@@ -5,6 +5,7 @@
 #include <GLFW/glfw3.h>
 #include <cassert>
 #include <fstream>
+#include <glm/ext/vector_float2.hpp>
 #include <iostream>
 #include <sstream>
 
@@ -168,21 +169,25 @@ void Shader::CheckLinking(unsigned int id) const {
   }
 }
 
-void Shader::SetMat4Uniform(const std::string &name, glm::mat4 value) const {
+void Shader::SetMat4Uniform(const std::string &name, const glm::mat4 value) const {
   glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE,
                      glm::value_ptr(value));
 }
 
-void Shader::SetVec4Uniform(const std::string &name, glm::vec4 value) const {
+void Shader::SetVec4Uniform(const std::string &name, const glm::vec4 value) const {
   glUniform4f(glGetUniformLocation(ID, name.c_str()), value.x, value.y, value.z,
               value.w);
 }
 
-void Shader::SetFloatUniform(const std::string &name, float value) const {
+void Shader::SetFloatUniform(const std::string &name, const float value) const {
   glUniform1f(glad_glGetUniformLocation(ID, name.c_str()), value);
 }
 
-void Shader::SetVec3Uniform(const std::string &name, glm::vec3 value) const {
+void Shader::SetVec3Uniform(const std::string &name, const glm::vec3 value) const {
   glUniform3f(glGetUniformLocation(ID, name.c_str()), value.x, value.y,
               value.z);
+}
+
+void Shader::SetVec2Uniform(const std::string &name, const glm::vec2 value) const {
+  glUniform2f(glGetUniformLocation(ID, name.c_str()), value.x, value.y);
 }

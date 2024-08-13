@@ -9,7 +9,7 @@ private:
   std::shared_ptr<Camera> camera;
   float phi{};
   float theta{};
-  float radius = 3;
+  float radius = 1;
 
   glm::vec2 prev_cursor_pos;
   glm::vec2 cam_speed{0.01, 0.01};

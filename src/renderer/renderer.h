@@ -4,6 +4,7 @@
 #include <GLFW/glfw3.h>
 #include <glm/ext/matrix_float4x4.hpp>
 #include <glm/ext/quaternion_float.hpp>
+#include <glm/ext/vector_float2.hpp>
 #include <glm/ext/vector_float3.hpp>
 #include <glm/ext/vector_float4.hpp>
 #include <glm/gtc/quaternion.hpp>
@@ -13,6 +14,9 @@ class Renderer {
 public:
   constexpr static const float start_width = 1600;
   constexpr static const float start_height = 1200;
+
+  inline static float viewport_width;
+  inline static float viewport_height;
 
   bool drawWireFrame = false;
 
@@ -28,6 +32,8 @@ public:
   void Update();
   void Finalize();
   bool IsClosing() { return glfwWindowShouldClose(window); }
+
+  static glm::vec2 GetViewportSize();
 
 private:
   void ProcessEvents();
