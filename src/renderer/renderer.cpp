@@ -1,12 +1,11 @@
 #include "renderer.h"
 #include "GUI/GUI.h"
-#include "GUI/graphView.h"
 #include "glad/glad.h"
-#include "input.h"
 #include "primitives/primitive.h"
 #include "sceneProvider.h"
 #include <GL/gl.h>
 #include <GLFW/glfw3.h>
+#include <cassert>
 #include <glm/detail/qualifier.hpp>
 #include <glm/ext/matrix_float4x4.hpp>
 #include <glm/ext/matrix_transform.hpp>
@@ -25,7 +24,6 @@
 #include <ostream>
 
 std::shared_ptr<Primitive> root;
-GraphView graphView;
 
 Renderer::Renderer(std::shared_ptr<Camera> camera) : camera(std::shared_ptr<Camera>(camera)) {}
 
@@ -57,10 +55,7 @@ bool Renderer::Initialize() {
 
   glViewport(0, 0, start_width, start_height);
   glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-  std::shared_ptr<Graph> graph = SceneProvider::GetGraph();
-  root = graph;
-  // TODO: GET THIS FROM HERE
-  graphView = GraphView(graph);
+  root = SceneProvider::GetGraph();
 
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -83,11 +78,8 @@ void Renderer::Update() {
   ImGui::NewFrame();
 
   glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-
   glClear(GL_COLOR_BUFFER_BIT);
 
-  graphView.Draw();
-  graphView.SetDataOnGraph();
   RenderScene(root);
 
   ImGui::Render();
@@ -98,7 +90,8 @@ void Renderer::Update() {
 }
 
 void Renderer::RenderScene(const std::shared_ptr<Primitive> &root) {
-  root->DrawRecursive(camera->GetPVMatrix(), glfwGetTime());
+  assert(root != nullptr);
+  root->DrawRecursive(camera->GetPVMatrix());
 }
 
 bool Renderer::CreateWindow() {
@@ -109,8 +102,6 @@ bool Renderer::CreateWindow() {
     glfwTerminate();
     return false;
   }
-
-  Input::window = window;
 
   viewport_width = start_width;
   viewport_height = start_height;

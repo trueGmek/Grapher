@@ -6,6 +6,7 @@
 
 #include "constants.cpp"
 #include "graph/graph.h"
+#include "GUI/graphView.h"
 #include "primitives/line.h"
 #include "primitives/point.h"
 #include "primitives/primitive.h"
@@ -14,12 +15,12 @@
 
 namespace SceneProvider {
 
-static std::unique_ptr<Primitive> GetSamleScene();
-static std::unique_ptr<Graph> GetGraph();
+static std::shared_ptr<Primitive> GetSamleScene();
+static std::shared_ptr<Graph> GetGraph();
 
 }  // namespace SceneProvider
 
-static std::unique_ptr<Primitive> SceneProvider::GetSamleScene() {
+static std::shared_ptr<Primitive> SceneProvider::GetSamleScene() {
   auto root = std::make_unique<Square>();
   root->color = glm::vec4(0.25f);
   root->transform.scale = glm::vec3(1.5);
@@ -68,8 +69,10 @@ static std::unique_ptr<Primitive> SceneProvider::GetSamleScene() {
 #define INCLUDE_POINTS 1
 #define INCLUDE_LINES 1
 
-static std::unique_ptr<Graph> SceneProvider::GetGraph() {
-  auto root = std::make_unique<Graph>();
+static std::shared_ptr<Graph> SceneProvider::GetGraph() {
+  auto root = std::make_shared<Graph>();
+  auto graphView = std::make_shared<GraphView>(root);
+  root->AddChild(graphView);
 
 #if INCLUDE_LINES
 
@@ -86,7 +89,7 @@ static std::unique_ptr<Graph> SceneProvider::GetGraph() {
   root->AddChild(z_line);
 #endif  // INCLUDE_LINES
 
-    #if INCLUDE_POINTS
+#if INCLUDE_POINTS
 
   auto xPoint = std::make_shared<Point>();
   xPoint->transform.position = constants::vec3::left;

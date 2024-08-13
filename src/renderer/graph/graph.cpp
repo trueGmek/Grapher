@@ -5,6 +5,7 @@
 #include "shader.h"
 #include <GL/gl.h>
 #include <GL/glext.h>
+#include <GLFW/glfw3.h>
 #include <glm/ext/vector_float2.hpp>
 #include <vector>
 
@@ -13,10 +14,18 @@ const std::string GEOMETRY_SHADER_PATH{"../resources/shaders/emmit_sin.geom"};
 const std::string FRAGMENT_SHADER_PATH{"../resources/shaders/emmit_sin.frag"};
 
 Graph::Graph() : Primitive(VERTEX_SHADER_PATH, FRAGMENT_SHADER_PATH, GEOMETRY_SHADER_PATH) {
-  GenerateBuffer();
   glGenVertexArrays(1, &VAO);
   glGenBuffers(1, &VBO);
 
+  SetBuffers();
+};
+
+void Graph::SetBuffers() {
+  GenerateBuffer();
+  SetVBO();
+}
+
+void Graph::SetVBO() {
   glBindVertexArray(VAO);
   glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
@@ -29,7 +38,7 @@ Graph::Graph() : Primitive(VERTEX_SHADER_PATH, FRAGMENT_SHADER_PATH, GEOMETRY_SH
   glEnableVertexAttribArray(0);
 
   glBindVertexArray(0);
-};
+}
 
 void Graph::Draw(const glm::mat4 &PV) {
   shader.Use();
@@ -43,6 +52,12 @@ void Graph::Draw(const glm::mat4 &PV) {
   shader.SetFloatUniform(constants::shader::vertices_per_point, vertices_per_point);
   shader.SetFloatUniform(constants::shader::distance_between_vertices, distance_between_vertices);
   shader.SetFloatUniform(constants::shader::point_pixel_size, vertex_size);
+
+  shader.SetFloatUniform(constants::shader::speed, speed);
+  shader.SetFloatUniform(constants::shader::amplitude, amplitude);
+  shader.SetFloatUniform(constants::shader::frequency, frequency);
+
+  shader.SetFloatUniform(constants::shader::time, glfwGetTime());
 
   glBindVertexArray(VAO);
   glDrawArrays(GL_POINTS, 0, points);

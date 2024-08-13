@@ -5,7 +5,7 @@
 namespace constants {
 
 class shader {
-public:
+ public:
   inline static const std::string MVP{"MVP"};
   inline static const std::string time{"uTime"};
   inline static const std::string frequency{"uFrequency"};
@@ -19,7 +19,7 @@ public:
 };
 
 class colors {
-public:
+ public:
   inline static const glm::vec4 red{1.0, 0.0, 0.0, 1.0};
   inline static const glm::vec4 green{0.0, 1.0, 0.0, 1.0};
   inline static const glm::vec4 blue{0.0, 0.0, 1.0, 1.0};
@@ -28,7 +28,7 @@ public:
 };
 
 class vec3 {
-public:
+ public:
   inline static const glm::vec3 zero{0.0};
   inline static const glm::vec3 one{1.0};
 
@@ -46,4 +46,4 @@ class vec4 {
   inline static const glm::vec4 zero{0.0};
 };
 
-} // namespace constants
+}  // namespace constants

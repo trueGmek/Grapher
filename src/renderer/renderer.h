@@ -11,21 +11,21 @@
 #include <memory>
 
 class Renderer {
-public:
+ public:
   constexpr static const float start_width = 1600;
   constexpr static const float start_height = 1200;
 
   inline static float viewport_width;
   inline static float viewport_height;
+  inline static GLFWwindow *window;
 
   bool drawWireFrame = false;
 
-private:
+ private:
   unsigned int VBO, VAO;
   std::shared_ptr<Camera> camera;
-  GLFWwindow *window;
 
-public:
+ public:
   Renderer(std::shared_ptr<Camera> camera);
 
   bool Initialize();
@@ -35,7 +35,7 @@ public:
 
   static glm::vec2 GetViewportSize();
 
-private:
+ private:
   void ProcessEvents();
   bool CreateWindow();
   void RenderScene(const std::shared_ptr<Primitive> &root);

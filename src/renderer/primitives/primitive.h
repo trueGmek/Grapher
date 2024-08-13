@@ -1,6 +1,4 @@
 #pragma once
-
-#include "../utils/constants.cpp"
 #include "shader.h"
 #include <GLFW/glfw3.h>
 #include <glm/ext/matrix_float4x4.hpp>
@@ -12,33 +10,29 @@
 #include "transform.h"
 
 class Primitive {
-public:
+ public:
   Transform transform;
   Shader shader;
 
   Primitive *parent;
   std::vector<std::shared_ptr<Primitive>> children{};
 
-protected:
+ protected:
   unsigned int VBO, VAO;
 
-public:
-  Primitive(auto vertexShaderPath, auto fragmentShaderPath)
-      : shader(vertexShaderPath, fragmentShaderPath) {}
+ public:
+  Primitive(auto vertexShaderPath, auto fragmentShaderPath) : shader(vertexShaderPath, fragmentShaderPath) {}
 
-  Primitive(auto vertexShaderPath, auto fragmentShaderPath,
-            auto geometryShaderPath)
+  Primitive(auto vertexShaderPath, auto fragmentShaderPath, auto geometryShaderPath)
       : shader(vertexShaderPath, fragmentShaderPath, geometryShaderPath) {}
 
   virtual void Draw(const glm::mat4 &PV) = 0;
 
-  void DrawRecursive(const glm::mat4 &PV, float time) {
-
-    shader.SetFloatUniform(constants::shader::time, time);
+  void DrawRecursive(const glm::mat4 &PV) {
     Draw(PV);
 
     for (auto child : children) {
-      child->DrawRecursive(PV * transform.CalculateTRS(), time);
+      child->DrawRecursive(PV * transform.CalculateTRS());
     }
   }
 
@@ -47,9 +41,7 @@ public:
     children.back()->parent = this;
   }
 
-protected:
+ protected:
   /// This methods calculates and returns the Model-View-Projection matrix
-  const glm::mat4 CalculateMVP(const glm::mat4 &PV) {
-    return PV * transform.CalculateTRS();
-  }
+  const glm::mat4 CalculateMVP(const glm::mat4 &PV) { return PV * transform.CalculateTRS(); }
 };
