@@ -12,7 +12,8 @@ void GraphView::Draw(const glm::mat4& PV) {
     ImGui::SliderFloat("speed", &lockedGraph->speed, 1, 100);
     ImGui::SliderFloat("amplitude", &lockedGraph->amplitude, 0, 2);
     ImGui::SliderInt("vertices per point", &lockedGraph->vertices_per_point, 1, 32);
-    ImGui::SliderInt("points", &lockedGraph->points, 1, 32);
+    // ImGui::SliderInt("points_z", &lockedGraph->points.x, 1, 32);
+    // ImGui::SliderInt("points_x", &lockedGraph->points.y, 1, 32);
     ImGui::SliderFloat("distance_between_vertices", &lockedGraph->distance_between_vertices, 0, 1);
 
     float* colorArray = glm::value_ptr(lockedGraph->color);

@@ -1,14 +1,16 @@
 #pragma once
 
 #include "primitives/primitive.h"
+#include <glm/ext/vector_float2.hpp>
 #include <glm/ext/vector_float4.hpp>
 #include "constants.cpp"
 
 class Graph : public Primitive {
  public:
   int vertex_size{5};
-  int points{10};
-  int vertices_per_point{16};
+  // X=10->Z Y=1->X
+  glm::ivec2 points{10, 300};
+  int vertices_per_point{32};
 
   float speed{1};
   float frequency{10};

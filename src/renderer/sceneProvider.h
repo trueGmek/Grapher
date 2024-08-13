@@ -16,7 +16,7 @@
 namespace SceneProvider {
 
 static std::shared_ptr<Primitive> GetSamleScene();
-static std::shared_ptr<Graph> GetGraph();
+static std::shared_ptr<Primitive> GetGraph();
 
 }  // namespace SceneProvider
 
@@ -69,11 +69,8 @@ static std::shared_ptr<Primitive> SceneProvider::GetSamleScene() {
 #define INCLUDE_POINTS 1
 #define INCLUDE_LINES 1
 
-static std::shared_ptr<Graph> SceneProvider::GetGraph() {
-  auto root = std::make_shared<Graph>();
-  auto graphView = std::make_shared<GraphView>(root);
-  root->AddChild(graphView);
-
+static std::shared_ptr<Primitive> SceneProvider::GetGraph() {
+  auto root = std::make_shared<Point>();
 #if INCLUDE_LINES
 
   auto x_line = std::make_shared<Line>(constants::vec3::left, constants::vec3::right);
@@ -129,6 +126,13 @@ static std::shared_ptr<Graph> SceneProvider::GetGraph() {
   root->AddChild(zTriangle);
 
 #endif  // INCLUDE_TIRANGLES
+
+  auto graph = std::make_shared<Graph>();
+  graph->transform.position = glm::vec3{-1, 0, -1};
+  root->AddChild(graph);
+
+  auto graphView = std::make_shared<GraphView>(graph);
+  graph->AddChild(graphView);
 
   return root;
 }

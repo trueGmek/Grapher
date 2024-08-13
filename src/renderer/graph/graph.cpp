@@ -7,6 +7,7 @@
 #include <GL/glext.h>
 #include <GLFW/glfw3.h>
 #include <glm/ext/vector_float2.hpp>
+#include <iostream>
 #include <vector>
 
 const std::string VERTEX_SHADER_PATH{"../resources/shaders/emmit_sin.vert"};
@@ -60,7 +61,7 @@ void Graph::Draw(const glm::mat4 &PV) {
   shader.SetFloatUniform(constants::shader::time, glfwGetTime());
 
   glBindVertexArray(VAO);
-  glDrawArrays(GL_POINTS, 0, points);
+  glDrawArrays(GL_POINTS, 0, points.x * points.y);
 
   glBindVertexArray(0);
 }
@@ -71,11 +72,17 @@ void Graph::GenerateBuffer() {
   float distance_between_points =
       (distance_between_vertices + point_size_NDC) * vertices_per_point + distance_between_vertices;
 
-  for (int i = 0; i < points; i++) {
-    geometryBuffer.push_back(0.0);
-    geometryBuffer.push_back(0.0);
-    geometryBuffer.push_back(distance_between_points * i);
+  for (int j = 0; j < points.y; j++) {
+    for (int i = 0; i < points.x; i++) {
+      geometryBuffer.push_back(point_size_NDC * j);
+      geometryBuffer.push_back(0.0);
+      geometryBuffer.push_back(distance_between_points * i);
+    }
   }
+
+  std::cout << "Generated buffer." << std::endl;
+  std::cout << points.x * points.y << " emmited from the CPU to the GPU" << std::endl;
+  std::cout << points.x * points.y * vertices_per_point << " drawn by the GPU" << std::endl;
 
   geometryBuffer.shrink_to_fit();
 }
