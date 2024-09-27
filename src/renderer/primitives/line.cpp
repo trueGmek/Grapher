@@ -1,6 +1,6 @@
 
 #include "line.h"
-#include "constants.cpp"
+#include "constants.h"
 
 #include <GL/gl.h>
 #include <glm/ext/matrix_float4x4.hpp>

@@ -4,9 +4,10 @@
 #include <glm/trigonometric.hpp>
 #include <memory>
 
-#include "constants.cpp"
+#include "constants.h"
 #include "graph/graph.h"
 #include "GUI/graphView.h"
+#include "GUI/equation/equationView.h"
 #include "primitives/line.h"
 #include "primitives/point.h"
 #include "primitives/primitive.h"
@@ -133,6 +134,9 @@ static std::shared_ptr<Primitive> SceneProvider::GetGraph() {
 
   auto graphView = std::make_shared<GraphView>(graph);
   graph->AddChild(graphView);
+
+  auto equationView = std::make_shared<EquationView>(graph);
+  graph->AddChild(equationView);
 
   return root;
 }

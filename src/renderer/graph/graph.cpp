@@ -1,6 +1,6 @@
 #include "graph.h"
 
-#include "constants.cpp"
+#include "constants.h"
 #include "renderer.h"
 #include "shader.h"
 #include <GL/gl.h>

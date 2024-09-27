@@ -13,6 +13,4 @@ class GraphView : public Primitive {
   void Draw(const glm::mat4& PV) override;
 
   GraphView(std::weak_ptr<Graph> graph);
-
- private:
 };

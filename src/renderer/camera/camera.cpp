@@ -3,7 +3,7 @@
 #include <glm/ext/matrix_transform.hpp>
 #include <glm/ext/vector_float3.hpp>
 #include <renderer.h>
-#include "constants.cpp"
+#include "constants.h"
 
 Camera::Camera() {}
 

@@ -7,7 +7,7 @@
 namespace Input {
 
 inline bool IsMousePressed() {
-  return glfwGetMouseButton(Renderer::window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS &&
+  return glfwGetMouseButton(Renderer::window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS &&
          ImGui::IsAnyItemHovered() == false;
 }
 

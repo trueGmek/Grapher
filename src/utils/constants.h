@@ -20,11 +20,11 @@ class shader {
 
 class colors {
  public:
-  inline static const glm::vec4 red{1.0, 0.0, 0.0, 1.0};
-  inline static const glm::vec4 green{0.0, 1.0, 0.0, 1.0};
-  inline static const glm::vec4 blue{0.0, 0.0, 1.0, 1.0};
-  inline static const glm::vec4 white{1.0};
-  inline static const glm::vec4 black{0.0, 0.0, 0.0, 1.0};
+  inline static constexpr glm::vec4 red{1.0, 0.0, 0.0, 1.0};
+  inline static constexpr glm::vec4 green{0.0, 1.0, 0.0, 1.0};
+  inline static constexpr glm::vec4 blue{0.0, 0.0, 1.0, 1.0};
+  inline static constexpr glm::vec4 white{1.0};
+  inline static constexpr glm::vec4 black{0.0, 0.0, 0.0, 1.0};
 };
 
 class vec3 {

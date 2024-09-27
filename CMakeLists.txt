@@ -14,8 +14,12 @@ find_package(glm CONFIG REQUIRED)
 find_package(glad CONFIG REQUIRED)
 find_package(glfw3 CONFIG REQUIRED)
 
-# UTILS LIBRARY
-set(UTILS_SOURCES src/utils/constants.cpp)
+# UTILS AND PARSER LIBRARY
+set(UTILS_SOURCES #
+    src/utils/constants.h #
+    src/parser/parser.h #
+    src/parser/parser.cpp)
+
 add_library(utils ${UTILS_SOURCES})
 target_include_directories(
   utils PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/utils>)
@@ -47,6 +51,8 @@ set(RENDERER_SOURCES
     src/renderer/sceneProvider.h
     src/renderer/GUI/graphView.h
     src/renderer/GUI/graphView.cpp
+    src/renderer/GUI/equation/equationView.h
+    src/renderer/GUI/equation/equationView.cpp
     src/renderer/input.h)
 
 add_library(renderer ${RENDERER_SOURCES})
@@ -66,8 +72,11 @@ project(
   DESCRIPTION "Grapher"
   LANGUAGES CXX)
 
-set(PROJECT_FILES src/main.cpp src/cameraController/cameraController.h
-                  src/cameraController/cameraController.cpp)
+set(PROJECT_FILES
+    src/main.cpp #
+    src/cameraController/cameraController.h
+    src/cameraController/cameraController.cpp)
+
 add_executable(${PROJECT_NAME} ${PROJECT_FILES})
 
 target_link_libraries(${PROJECT_NAME} PRIVATE glad::glad)

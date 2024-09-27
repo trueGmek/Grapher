@@ -1,5 +1,5 @@
 #include "triangle.h"
-#include "constants.cpp"
+#include "constants.h"
 
 const std::string VERTEX_SHADER_PATH{"../resources/shaders/triangle.vert"};
 const std::string FRAG_SHADER_PATH{"../resources/shaders/triangle.frag"};
