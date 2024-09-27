@@ -1,1 +1,4 @@
-class Parser {};
+class Parser {
+ public:
+  int TestMethod(int x);
+};

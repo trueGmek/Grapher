@@ -9,24 +9,36 @@ set(VCPKG_TARGET_TRIPLET x64-linux)
 include(~/dev/vcpkg/scripts/buildsystems/vcpkg.cmake)
 
 # FIND PACKAGES
-find_package(imgui CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
 find_package(glad CONFIG REQUIRED)
 find_package(glfw3 CONFIG REQUIRED)
+find_package(imgui CONFIG REQUIRED)
 
-# UTILS AND PARSER LIBRARY
+# UTILS
+set(UTILS_NAME utils)
 set(UTILS_SOURCES #
     src/utils/constants.h #
     src/parser/parser.h #
     src/parser/parser.cpp)
 
-add_library(utils ${UTILS_SOURCES})
-target_include_directories(
-  utils PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/utils>)
+add_library(${UTILS_NAME} ${UTILS_SOURCES})
 
-target_link_libraries(utils PRIVATE glm::glm)
+target_include_directories(
+  ${UTILS_NAME} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/utils>)
+
+target_link_libraries(${UTILS_NAME} PRIVATE glm::glm)
+
+# PARSER
+set(PARSER_LIB_NAME parser)
+set(PARSER_LIB_SOURCES #
+    src/parser/parser.h #
+    src/parser/parser.cpp)
+
+add_library(${PARSER_LIB_NAME} ${PARSER_LIB_SOURCES})
 
 # CONFIGURE RENDERER LIBRARY
+
+set(RENDERER_NAME renderer)
 set(RENDERER_SOURCES
     src/renderer/shader.cpp
     src/renderer/shader.h
@@ -55,19 +67,20 @@ set(RENDERER_SOURCES
     src/renderer/GUI/equation/equationView.cpp
     src/renderer/input.h)
 
-add_library(renderer ${RENDERER_SOURCES})
+add_library(${RENDERER_NAME} ${RENDERER_SOURCES})
 
 target_include_directories(
-  renderer PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/renderer>)
+  ${RENDERER_NAME}
+  PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/renderer>)
 
-target_link_libraries(renderer PRIVATE utils)
-target_link_libraries(renderer PRIVATE glad::glad)
-target_link_libraries(renderer PRIVATE glm::glm)
-target_link_libraries(renderer PRIVATE imgui::imgui)
+target_link_libraries(${RENDERER_NAME} PRIVATE utils)
+target_link_libraries(${RENDERER_NAME} PRIVATE glad::glad)
+target_link_libraries(${RENDERER_NAME} PRIVATE glm::glm)
+target_link_libraries(${RENDERER_NAME} PRIVATE imgui::imgui)
 
 # CONFIGURE PORJECT
 project(
-  Grapher
+  grapher
   VERSION 1.0
   DESCRIPTION "Grapher"
   LANGUAGES CXX)
@@ -84,3 +97,18 @@ target_link_libraries(${PROJECT_NAME} PRIVATE glfw)
 target_link_libraries(${PROJECT_NAME} PRIVATE imgui::imgui)
 target_link_libraries(${PROJECT_NAME} PRIVATE glm::glm)
 target_link_libraries(${PROJECT_NAME} PRIVATE renderer)
+
+# GTEST
+enable_testing()
+find_package(GTest CONFIG REQUIRED)
+
+set(TESTS_LIB_NAME grapher_tests)
+
+add_executable(${TESTS_LIB_NAME} tests/hello_test.cpp)
+
+target_link_libraries(${TESTS_LIB_NAME} PRIVATE ${PARSER_LIB_NAME})
+target_link_libraries(${TESTS_LIB_NAME} PRIVATE GTest::gtest GTest::gtest_main
+                                                GTest::gmock GTest::gmock_main)
+
+include(GoogleTest)
+gtest_discover_tests(${TESTS_LIB_NAME})

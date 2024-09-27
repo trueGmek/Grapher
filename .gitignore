@@ -54,3 +54,6 @@ imgui.ini
 
 #Clion
 .idea/*
+
+#VCPKG
+/vcpkg_installed*/
