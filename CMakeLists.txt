@@ -16,10 +16,7 @@ find_package(imgui CONFIG REQUIRED)
 
 # UTILS
 set(UTILS_NAME utils)
-set(UTILS_SOURCES #
-    src/utils/constants.h #
-    src/parser/parser.h #
-    src/parser/parser.cpp)
+set(UTILS_SOURCES src/utils/constants.h)
 
 add_library(${UTILS_NAME} ${UTILS_SOURCES})
 
@@ -36,8 +33,11 @@ set(PARSER_LIB_SOURCES #
 
 add_library(${PARSER_LIB_NAME} ${PARSER_LIB_SOURCES})
 
-# CONFIGURE RENDERER LIBRARY
+target_include_directories(
+  ${PARSER_LIB_NAME}
+  PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/parser>)
 
+# CONFIGURE RENDERER LIBRARY
 set(RENDERER_NAME renderer)
 set(RENDERER_SOURCES
     src/renderer/shader.cpp
@@ -73,7 +73,8 @@ target_include_directories(
   ${RENDERER_NAME}
   PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/renderer>)
 
-target_link_libraries(${RENDERER_NAME} PRIVATE utils)
+target_link_libraries(${RENDERER_NAME} PRIVATE ${UTILS_NAME})
+target_link_libraries(${RENDERER_NAME} PRIVATE ${PARSER_LIB_NAME})
 target_link_libraries(${RENDERER_NAME} PRIVATE glad::glad)
 target_link_libraries(${RENDERER_NAME} PRIVATE glm::glm)
 target_link_libraries(${RENDERER_NAME} PRIVATE imgui::imgui)
@@ -99,16 +100,17 @@ target_link_libraries(${PROJECT_NAME} PRIVATE glm::glm)
 target_link_libraries(${PROJECT_NAME} PRIVATE renderer)
 
 # GTEST
+set(TEST_EXE_NAME grapher_tests)
+set(TEST_EXE_FILES tests/hello_test.cpp)
+
+add_executable(${TEST_EXE_NAME} ${TEST_EXE_FILES})
+
+target_link_libraries(${TEST_EXE_NAME} PRIVATE ${PARSER_LIB_NAME})
+
 enable_testing()
 find_package(GTest CONFIG REQUIRED)
-
-set(TESTS_LIB_NAME grapher_tests)
-
-add_executable(${TESTS_LIB_NAME} tests/hello_test.cpp)
-
-target_link_libraries(${TESTS_LIB_NAME} PRIVATE ${PARSER_LIB_NAME})
-target_link_libraries(${TESTS_LIB_NAME} PRIVATE GTest::gtest GTest::gtest_main
-                                                GTest::gmock GTest::gmock_main)
+target_link_libraries(${TEST_EXE_NAME} PRIVATE GTest::gtest GTest::gtest_main
+                                               GTest::gmock GTest::gmock_main)
 
 include(GoogleTest)
-gtest_discover_tests(${TESTS_LIB_NAME})
+gtest_discover_tests(${TEST_EXE_NAME})

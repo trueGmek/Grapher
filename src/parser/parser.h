@@ -1,4 +1,4 @@
 class Parser {
  public:
-  int TestMethod(int x);
+  int TestMethod(int x) const;
 };

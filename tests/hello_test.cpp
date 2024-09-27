@@ -1,15 +1,33 @@
 #include <gtest/gtest.h>
+#include "parser.h"
 
 // Demonstrate some basic assertions.
 TEST(HelloTest, BasicAssertions) {
-  // Expect two strings not to be equal.
-  EXPECT_STRNE("hello", "world");
-  // Expect equality.
-  EXPECT_EQ(7 * 6, 42);
+  // Arrange
+  // Act
+  // Assert
+  EXPECT_TRUE(true);
 }
-TEST(HelloTest2, BasicAssertions) {
-  // Expect two strings not to be equal.
-  EXPECT_STRNE("hello", "world");
-  // Expect equality.
-  EXPECT_EQ(7 * 6, 42);
+TEST(Parser, TestMethodWorks) {
+  // Arrange
+  const Parser parser{};
+  const int arg = 2;
+
+  // Act
+  int result = parser.TestMethod(arg);
+
+  // Assert
+  EXPECT_EQ(result, arg);
+}
+
+TEST(Parser, TestMethod_2_NE_3) {
+  // Arrange
+  const Parser parser{};
+  const int arg = 2;
+
+  // Act
+  int result = parser.TestMethod(arg);
+
+  // Assert
+  EXPECT_NE(result, 3);
 }
